@@ -1,0 +1,6 @@
+org.springframework.boot.BootstrapRegistryInitializer = com.springboot.provider.common.lifecycle.BootstrapRegistryInitializerHandler
+org.springframework.boot.SpringApplicationRunListener = com.springboot.provider.common.lifecycle.SpringApplicationRunListenerHandler
+org.springframework.boot.env.EnvironmentPostProcessor = com.springboot.provider.common.lifecycle.EnvironmentPostProcessorHandler
+org.springframework.boot.autoconfigure.AutoConfigurationImportListener = com.springboot.provider.common.lifecycle.AutoConfigurationImportListenerHandler
+org.springframework.context.ApplicationContextInitializer = com.springboot.provider.common.lifecycle.ApplicationContextInitializerHandler
+org.springframework.boot.diagnostics.FailureAnalyzer = com.springboot.provider.common.lifecycle.ProjectConstraintViolationFailureHandler

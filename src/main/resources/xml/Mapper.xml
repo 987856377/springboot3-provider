@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<namespace xmlns="http://localhost/schema/framework"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://localhost/schema/framework http://localhost/schema/framework/framework.xsd"
+           mapper="com.springboot.provider.mjt.constants.Mapper">
+
+    <sql id="selectById">
+        select * from role where id = ? and title = ?
+    </sql>
+
+    <sql id="selectByUsername">
+        select * from user where username = ?
+    </sql>
+
+    <sql id="saveUser">
+        insert into user(username, password, create_time, status) values (?, ?, ?, ?)
+    </sql>
+
+    <sql id="saveRole">
+        insert into role(name, title) values (?, ?)
+    </sql>
+
+    <sql id="batchSaveRole">
+        insert into role (name, title) values (?, ?)
+    </sql>
+
+    <sql id="getRoleById">
+        select * from role where id = ?
+    </sql>
+
+    <sql id="getUserById">
+        select * from user where id = :id
+    </sql>
+
+    <sql id="batchSaveUser">
+        insert into user(id, username, password, create_time, status) values (:id, :username, :password, :createTime, :status)
+    </sql>
+</namespace>
