@@ -5,8 +5,6 @@ import com.springboot.provider.module.pay.factory.PayStrategyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-
 /**
  * @Description
  * @Project springboot-provider

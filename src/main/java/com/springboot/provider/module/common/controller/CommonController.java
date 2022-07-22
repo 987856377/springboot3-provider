@@ -129,7 +129,8 @@ public class CommonController {
 
         DataSource dataSource = ApplicationContextDataSourceHolder.buildDataSource(DataSourceEnum.MYSQL.getDbType(), "localhost", "3306", "test", "root", "root", "");
 
-        return ResultJson.success(ApplicationContextDataSourceHolder.addDataSource("test", build1));
+        ApplicationContextDataSourceHolder.addDataSource("test", build1);
+        return ResultJson.success();
     }
 
     @RequestMapping("/test/getRunningSQL")

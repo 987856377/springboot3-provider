@@ -1,12 +1,11 @@
 package com.springboot.provider.common.lifecycle;
 
 import com.springboot.provider.common.exception.CacheCompletelyBrokenException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.availability.AvailabilityChangeEvent;
 import org.springframework.boot.availability.LivenessState;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @Description

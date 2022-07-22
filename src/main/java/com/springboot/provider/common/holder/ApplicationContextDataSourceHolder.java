@@ -4,15 +4,16 @@ import com.springboot.provider.common.builder.HikariDataSourceBuilder;
 import com.springboot.provider.common.enums.DataSourceEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.availability.AvailabilityChangeEvent;
-import org.springframework.boot.availability.ReadinessState;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,9 +25,29 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2020/2/26 18:27
  */
 @Component
-public class ApplicationContextDataSourceHolder {
+public class ApplicationContextDataSourceHolder implements InitializingBean, DisposableBean {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationContextDataSourceHolder.class);
 
     private static final ConcurrentHashMap<String, DataSource> DATA_SOURCE_MAP = new ConcurrentHashMap<>();
+
+    private final ApplicationContext applicationContext;
+
+    public ApplicationContextDataSourceHolder(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        LOGGER.info("ApplicationContextDataSourceHandler start loading datasource ....");
+
+        String[] beanNamesForType = this.applicationContext.getBeanNamesForType(DataSource.class);
+        for (String beanName : beanNamesForType) {
+            Object bean = this.applicationContext.getBean(beanName);
+            ApplicationContextDataSourceHolder.addDataSource(beanName, (DataSource) bean);
+        }
+
+        LOGGER.info("ApplicationContextDataSourceHandler load context datasource: " + Arrays.toString(beanNamesForType));
+    }
 
     public static ConcurrentHashMap<String, DataSource> getDataSourceMap() {
         return DATA_SOURCE_MAP;
@@ -51,12 +72,14 @@ public class ApplicationContextDataSourceHolder {
      * @param dsName     数据源名称
      * @param dataSource 数据源
      */
-    public static Boolean addDataSource(String dsName, DataSource dataSource) {
-        if (StringUtils.hasText(dsName) && dataSource != null) {
-//        如果传入key对应的value已经存在，就返回存在的value，不进行替换。如果不存在，就添加key和value，返回null
-            return DATA_SOURCE_MAP.putIfAbsent(dsName, dataSource) == null;
+    public static synchronized void addDataSource(String dsName, DataSource dataSource) {
+        DataSource oldDataSource = DATA_SOURCE_MAP.put(dsName, dataSource);
+        // 关闭老的数据源
+        if (oldDataSource != null) {
+            closeDataSource(oldDataSource);
+            LOGGER.info("ApplicationContextDataSourceHolder close old datasource named [{}] success", dsName);
         }
-        return false;
+        LOGGER.info("ApplicationContextDataSourceHolder - add datasource named [{}] success", dsName);
     }
 
     /**
@@ -64,12 +87,46 @@ public class ApplicationContextDataSourceHolder {
      *
      * @param dsName 数据源名称
      */
-    public static Boolean removeDataSource(String dsName) {
-        if (StringUtils.hasText(dsName)) {
-            DATA_SOURCE_MAP.remove(dsName);
-            return true;
+    public static void removeDataSource(String dsName) {
+        if (!StringUtils.hasText(dsName)) {
+            throw new RuntimeException("remove parameter could not be empty");
         }
-        return false;
+        if (DATA_SOURCE_MAP.containsKey(dsName)) {
+            DataSource dataSource = DATA_SOURCE_MAP.remove(dsName);
+            closeDataSource(dataSource);
+            LOGGER.info("ApplicationContextDataSourceHolder - remove the database named [{}] success", dsName);
+        } else {
+            LOGGER.warn("ApplicationContextDataSourceHolder - could not find a database named [{}]", dsName);
+        }
+    }
+
+    private static void closeDataSource(DataSource dataSource) {
+        try {
+            Method closeMethod = ReflectionUtils.findMethod(dataSource.getClass(), "close");
+            if (closeMethod != null) {
+                closeMethod.invoke(dataSource);
+                LOGGER.info("ApplicationContextDataSourceHolder close datasource named [{}] success", dataSource);
+            } else {
+                closeMethod = ReflectionUtils.findMethod(dataSource.getClass(), "destroy");
+                if (closeMethod != null) {
+                    closeMethod.invoke(dataSource);
+                    LOGGER.info("ApplicationContextDataSourceHolder destroy datasource named [{}] success", dataSource);
+                } else {
+                    LOGGER.warn("ApplicationContextDataSourceHolder close or destroy datasource named [{}] failed", dataSource);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.warn("ApplicationContextDataSourceHolder closeDataSource named [{}] failed", dataSource, e);
+        }
+    }
+
+    /**
+     * 创建 Hikari 构造器
+     *
+     * @return HikariDataSourceBuilder
+     */
+    public static HikariDataSourceBuilder builder() {
+        return HikariDataSourceBuilder.create();
     }
 
     /**
@@ -107,12 +164,13 @@ public class ApplicationContextDataSourceHolder {
                 .password(password).build();
     }
 
-    /**
-     * 创建 Hikari 构造器
-     *
-     * @return HikariDataSourceBuilder
-     */
-    public static HikariDataSourceBuilder builder() {
-        return HikariDataSourceBuilder.create();
+    @Override
+    public void destroy() throws Exception {
+        LOGGER.info("ApplicationContextDataSourceHolder start closing ....");
+
+        DATA_SOURCE_MAP.values().forEach(ApplicationContextDataSourceHolder::closeDataSource);
+
+        LOGGER.info("ApplicationContextDataSourceHolder all closed success,bye");
     }
+
 }
