@@ -50,4 +50,10 @@ public class WechatPayService extends AbstractPayService implements PayService {
         }
         return false;
     }
+
+    @Override
+    public Boolean valid() {
+        logger.info("WechatPayService validate pay environment success!");
+        return true;
+    }
 }

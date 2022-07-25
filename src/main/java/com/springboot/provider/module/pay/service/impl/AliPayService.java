@@ -50,4 +50,10 @@ public class AliPayService extends AbstractPayService implements PayService {
         }
         return false;
     }
+
+    @Override
+    public Boolean valid() {
+        logger.info("AliPayService validate pay environment success!");
+        return true;
+    }
 }
