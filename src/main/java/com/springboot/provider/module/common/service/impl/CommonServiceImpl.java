@@ -41,7 +41,7 @@ public class CommonServiceImpl implements CommonService {
         User user = new User();
 //        user.setId(SnowflakeConstants.next());
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(username));
+        user.setPassword("username");
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         int his = userService.insert(user);

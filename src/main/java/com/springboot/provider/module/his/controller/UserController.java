@@ -79,8 +79,8 @@ public class UserController {
         if (bindingResult.hasErrors() && bindingResult.getFieldError() != null) {
             return ResultJson.failure(ResultCode.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
         }
-//        return ResultJson.success(userService.getById(user.getId()));
-        return ResultJson.success(userService.getByUserId(user.getId()));
+        return ResultJson.success(userService.getById(user.getId()));
+//        return ResultJson.success(userService.getByUserId(user.getId()));
     }
 
     @RequestMapping("save")
