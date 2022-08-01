@@ -33,16 +33,25 @@ public class SensitiveHandler extends StringTypeHandler {
 
     @Override
     public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return sm4.decryptStr(rs.getString(columnName));
+        if (StringUtils.hasText(rs.getString(columnName))) {
+            return sm4.decryptStr(rs.getString(columnName));
+        }
+        return null;
     }
 
     @Override
     public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return sm4.decryptStr(rs.getString(columnIndex));
+        if (StringUtils.hasText(rs.getString(columnIndex))) {
+            return sm4.decryptStr(rs.getString(columnIndex));
+        }
+        return null;
     }
 
     @Override
     public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        return sm4.decryptStr(cs.getString(columnIndex));
+        if (StringUtils.hasText(cs.getString(columnIndex))) {
+            return sm4.decryptStr(cs.getString(columnIndex));
+        }
+        return null;
     }
 }
