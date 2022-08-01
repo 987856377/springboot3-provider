@@ -56,12 +56,10 @@ public class SensitiveInterceptor implements Interceptor {
                 Object proceed = invocation.proceed();
                 if (proceed instanceof Collection) {
                     Collection<Object> collection = (Collection<Object>) proceed;
-                    if (!collection.isEmpty()) {
+                    if (!collection.isEmpty() && collection.stream().findFirst().get() instanceof User) {
                         collection.forEach(item -> {
-                            if (item instanceof User) {
-                                User user = (User) item;
-                                user.setUsername("decrypt" + NanoId.randomNanoId());
-                            }
+                            User user = (User) item;
+                            user.setUsername("decrypt" + NanoId.randomNanoId());
                         });
                         return collection;
                     }
