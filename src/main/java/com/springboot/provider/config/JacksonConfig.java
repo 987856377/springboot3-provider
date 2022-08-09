@@ -1,11 +1,14 @@
 package com.springboot.provider.config;
 
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.springboot.provider.common.jackson.BigNumberSerializer;
+import com.springboot.provider.common.jackson.SensitiveAnnotationIntrospector;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +46,11 @@ public class JacksonConfig {
         simpleModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
         objectMapper.registerModule(simpleModule);
         objectMapper.setTimeZone(TimeZone.getDefault());
+
+        AnnotationIntrospector ai = objectMapper.getSerializationConfig().getAnnotationIntrospector();
+        AnnotationIntrospector newAi = AnnotationIntrospectorPair.pair(ai, new SensitiveAnnotationIntrospector());
+        objectMapper.setAnnotationIntrospector(newAi);
+
         return objectMapper;
     }
 }
