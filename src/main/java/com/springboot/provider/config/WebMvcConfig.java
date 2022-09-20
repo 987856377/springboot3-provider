@@ -1,6 +1,7 @@
 package com.springboot.provider.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.provider.common.interceptor.HttpRequestHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -92,5 +93,10 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                 ((MappingJackson2HttpMessageConverter) converter).setObjectMapper(objectMapper);
             }
         });
+    }
+
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new HttpRequestHandlerInterceptor());
     }
 }

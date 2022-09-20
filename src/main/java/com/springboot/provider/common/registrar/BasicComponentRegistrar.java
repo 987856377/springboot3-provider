@@ -29,8 +29,17 @@ public class BasicComponentRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         Set<String> packagesToScan = getPackagesToScan(importingClassMetadata);
+        if (registry.containsBeanDefinition(BEAN_NAME)) {
+            updatePostProcessor(registry, packagesToScan);
+        }
+        else {
+            addPostProcessor(registry, packagesToScan);
+        }
+    }
 
-        addPostProcessor(registry, packagesToScan);
+    private void updatePostProcessor(BeanDefinitionRegistry registry, Set<String> packagesToScan) {
+        ComponentRegistrarPostProcessorBeanDefinition definition = (ComponentRegistrarPostProcessorBeanDefinition) registry.getBeanDefinition(BEAN_NAME);
+        definition.addPackageNames(packagesToScan);
     }
 
     private void addPostProcessor(BeanDefinitionRegistry registry, Set<String> packagesToScan) {

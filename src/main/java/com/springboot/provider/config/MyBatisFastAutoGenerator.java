@@ -80,7 +80,7 @@ public class MyBatisFastAutoGenerator {
                                 .columnNaming(NamingStrategy.underline_to_camel)
                                 .addTableFills(Arrays.asList(
                                         new Column("create_time", FieldFill.INSERT),
-                                        new Column("update_time", FieldFill.INSERT_UPDATE),
+                                        new Column("update_time", FieldFill.UPDATE),
                                         new Column("delete_flag", FieldFill.INSERT),
                                         new Column("version", FieldFill.INSERT)
                                 ))
@@ -90,7 +90,6 @@ public class MyBatisFastAutoGenerator {
                             .mapperBuilder()
                                 .enableBaseColumnList()
                                 .enableBaseResultMap()
-                                .enableMapperAnnotation()
                             .serviceBuilder()
                                 .formatServiceFileName("%sService")
                                 .formatServiceImplFileName("%sServiceImpl")

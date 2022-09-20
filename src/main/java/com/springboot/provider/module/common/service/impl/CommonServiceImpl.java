@@ -9,6 +9,7 @@ import com.springboot.provider.module.lis.service.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -42,8 +43,8 @@ public class CommonServiceImpl implements CommonService {
 //        user.setId(SnowflakeConstants.next());
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(username));
-        user.setCreateTime(new Date());
-        user.setUpdateTime(new Date());
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         int his = userService.insert(user);
 //        int a= 1/0;
 
