@@ -14,8 +14,8 @@ public class ScheduleTask {
     private final Logger logger = LoggerFactory.getLogger(ScheduleTask.class);
 
     @Scheduled(cron = "0 0/30 * * * ?") //间隔30分钟
-    public void unReadMessageTask(){
-        logger.info(String.format("启动监控服务: %s",Thread.currentThread().getName()));
+    public void unReadMessageTask() {
+        logger.info(String.format("启动监控服务: %s", Thread.currentThread().getName()));
         logger.info(String.format("最大内存: %d M, 已分配内存: %d M, 已分配内存中剩余空间: %d M, 最大可用内存: %d M",
                 Runtime.getRuntime().maxMemory() / 1024 / 1024,
                 Runtime.getRuntime().maxMemory() / 1024 / 1024,

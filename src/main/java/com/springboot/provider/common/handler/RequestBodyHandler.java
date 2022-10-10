@@ -30,6 +30,7 @@ public class RequestBodyHandler implements RequestBodyAdvice {
     /**
      * Invoked first to determine if this interceptor applies.
      * 此处如果返回false , 则不执行当前Advice的业务
+     *
      * @param methodParameter the method parameter
      * @param targetType      the target type, not necessarily the same as the method
      *                        parameter type, e.g. for {@code HttpEntity<String>}.
@@ -44,6 +45,7 @@ public class RequestBodyHandler implements RequestBodyAdvice {
     /**
      * Invoked second before the request body is read and converted.
      * 此做些编码 / 解密 / 封装参数为对象的操作
+     *
      * @param inputMessage  the request
      * @param parameter     the target method parameter
      * @param targetType    the target type, not necessarily the same as the method

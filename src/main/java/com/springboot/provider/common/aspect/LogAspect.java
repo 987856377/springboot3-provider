@@ -31,7 +31,7 @@ public class LogAspect {
 
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
-        String invokeId =  NanoId.randomNanoId();
+        String invokeId = NanoId.randomNanoId();
 
         logger.info("\nInvokeId: {} \nRemote Address: {} \nRequest URL: {} \nRequest URI: {} \nParameter: {}",
                 invokeId, request.getRemoteAddr(), request.getRequestURL(), request.getRequestURI(), gson.toJson(joinPoint.getArgs()));

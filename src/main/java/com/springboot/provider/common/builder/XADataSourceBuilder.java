@@ -55,8 +55,7 @@ public class XADataSourceBuilder {
             Object instance = BeanUtils.instantiateClass(dataSourceClass);
             Assert.isInstanceOf(XADataSource.class, instance);
             return (XADataSource) instance;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IllegalStateException("Unable to create XADataSource instance from '" + className + "'");
         }
     }
@@ -73,8 +72,7 @@ public class XADataSourceBuilder {
         properties.computeIfAbsent("password", (key) -> dataSourceProperties.determinePassword());
         try {
             properties.computeIfAbsent("url", (key) -> dataSourceProperties.determineUrl());
-        }
-        catch (DataSourceBeanCreationException ex) {
+        } catch (DataSourceBeanCreationException ex) {
             // Continue as not all XA DataSource's require a URL
         }
         MapConfigurationPropertySource source = new MapConfigurationPropertySource(properties);

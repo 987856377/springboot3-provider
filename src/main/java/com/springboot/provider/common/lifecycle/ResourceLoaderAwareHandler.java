@@ -7,9 +7,9 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Component;
 
 /*
-* ResourceLoaderAware：
-* 用于获取ResourceLoader的一个扩展类，ResourceLoader可以用于获取classpath内所有的资源对象，可以扩展此类来拿到ResourceLoader对象。
-* */
+ * ResourceLoaderAware：
+ * 用于获取ResourceLoader的一个扩展类，ResourceLoader可以用于获取classpath内所有的资源对象，可以扩展此类来拿到ResourceLoader对象。
+ * */
 @Component
 public class ResourceLoaderAwareHandler implements ResourceLoaderAware {
 

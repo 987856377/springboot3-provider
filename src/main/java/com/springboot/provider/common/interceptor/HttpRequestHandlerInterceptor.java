@@ -3,6 +3,7 @@ package com.springboot.provider.common.interceptor;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.core.map.MapUtil;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.google.gson.Gson;
 import com.springboot.provider.common.filter.RepeatedlyRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,8 +31,8 @@ public class HttpRequestHandlerInterceptor implements HandlerInterceptor {
 
     private final Gson gson = new Gson();
 
-    private final ThreadLocal<StopWatch> invokeTimeTL = new ThreadLocal<>();
-    private final ThreadLocal<String> invokeIdTL = new ThreadLocal<>();
+    private final TransmittableThreadLocal<StopWatch> invokeTimeTL = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<String> invokeIdTL = new TransmittableThreadLocal<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

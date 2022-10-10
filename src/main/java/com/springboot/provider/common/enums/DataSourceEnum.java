@@ -15,7 +15,7 @@ public enum DataSourceEnum {
     MYSQL("MYSQL", MysqlDataSource.class, "jdbc:mysql://",
             "?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false"),
 
-    ORACLE("ORACLE", OracleDataSource.class, "jdbc:oracle:thin:@","");
+    ORACLE("ORACLE", OracleDataSource.class, "jdbc:oracle:thin:@", "");
 
     private final String dbType;
     private final Class dataSourceType;

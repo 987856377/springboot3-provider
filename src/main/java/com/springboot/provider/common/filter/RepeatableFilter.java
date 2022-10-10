@@ -9,7 +9,6 @@ import java.io.IOException;
 
 /**
  * Repeatable 过滤器
- *
  */
 public class RepeatableFilter implements Filter {
     @Override
@@ -19,10 +18,10 @@ public class RepeatableFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         ServletRequest requestWrapper = null;
         if (request instanceof HttpServletRequest
-            && StringUtils.startsWithIgnoreCase(request.getContentType(), MediaType.APPLICATION_JSON_VALUE)) {
+                && StringUtils.startsWithIgnoreCase(request.getContentType(), MediaType.APPLICATION_JSON_VALUE)) {
             requestWrapper = new RepeatedlyRequestWrapper((HttpServletRequest) request, response);
         }
         if (null == requestWrapper) {

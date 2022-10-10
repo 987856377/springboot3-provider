@@ -30,7 +30,7 @@ public class SSL extends SimpleClientHttpRequestFactory {
 
     private SSLSocketFactory createSslSocketFactory() throws Exception {
         SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, new TrustManager[] { new SkipX509TrustManager() },
+        context.init(null, new TrustManager[]{new SkipX509TrustManager()},
                 new SecureRandom());
         return context.getSocketFactory();
     }

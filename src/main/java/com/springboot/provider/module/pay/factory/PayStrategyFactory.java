@@ -22,7 +22,7 @@ public class PayStrategyFactory {
         }
     }
 
-    public static PayService get(PayStrategy type){
+    public static PayService get(PayStrategy type) {
         return PAY_MAP.get(type);
     }
 }

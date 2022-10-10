@@ -16,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * XSS过滤处理
- *
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /**
@@ -87,7 +86,6 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * 是否是Json请求
-     *
      */
     public boolean isJsonRequest() {
         String header = super.getHeader(HttpHeaders.CONTENT_TYPE);

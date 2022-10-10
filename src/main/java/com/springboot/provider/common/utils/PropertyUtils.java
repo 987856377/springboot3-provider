@@ -20,10 +20,10 @@ public class PropertyUtils {
         Assert.notNull(fileName, "fileName must not be null");
 
         Resource resource = new ClassPathResource(fileName);
-        if (fileName.endsWith(".properties")){
+        if (fileName.endsWith(".properties")) {
             PropertiesPropertySourceLoader propertiesPropertySourceLoader = new PropertiesPropertySourceLoader();
             return propertiesPropertySourceLoader.load(key, resource).stream().map(s -> s.getProperty(key)).filter(Objects::nonNull).collect(Collectors.toList());
-        } else if (fileName.endsWith(".yml")){
+        } else if (fileName.endsWith(".yml")) {
             YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader();
             return yamlPropertySourceLoader.load(key, resource).stream().map(s -> s.getProperty(key)).filter(Objects::nonNull).collect(Collectors.toList());
         } else {
@@ -82,7 +82,7 @@ public class PropertyUtils {
 //            e.printStackTrace();
 //        }
 
-        System.out.println(PropertyUtils.load("application.properties","server.port"));
+        System.out.println(PropertyUtils.load("application.properties", "server.port"));
 
     }
 

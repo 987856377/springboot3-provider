@@ -268,7 +268,7 @@ public class FileServiceImpl implements FileService {
         acroFields.setGenerateAppearances(true);
         for (String formKey : acroFields.getFields().keySet()) {
             Object value = map.getOrDefault(formKey, EMPTY);
-            if (value instanceof String ) {
+            if (value instanceof String) {
                 acroFields.setField(formKey, (String) value);
             } else if (value instanceof Collection) {
                 acroFields.setField(formKey, recursionItems((Collection<Object>) value));
@@ -321,7 +321,7 @@ public class FileServiceImpl implements FileService {
             acroFields.setGenerateAppearances(true);
             for (String formKey : acroFields.getFields().keySet()) {
                 Object value = map.getOrDefault(formKey, EMPTY);
-                if (value instanceof String ) {
+                if (value instanceof String) {
                     acroFields.setField(formKey, (String) value);
                 } else if (value instanceof Collection) {
                     acroFields.setField(formKey, recursionItems((Collection<Object>) value));
@@ -353,7 +353,7 @@ public class FileServiceImpl implements FileService {
     private String recursionItems(Collection<Object> list) {
         StringBuilder builder = new StringBuilder("");
         for (Object obj : list) {
-            if (obj instanceof Map){
+            if (obj instanceof Map) {
                 Map<String, Object> map = (Map<String, Object>) obj;
                 map.forEach((key, value) -> {
                     if (value != null) {

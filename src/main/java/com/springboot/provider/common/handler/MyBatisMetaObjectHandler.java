@@ -1,6 +1,7 @@
 package com.springboot.provider.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.springboot.provider.common.BaseEntity;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +23,14 @@ public class MyBatisMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "deleteFlag", Integer.class, 0);
-        this.strictInsertFill(metaObject, "version", Integer.class, 1);
+        if (metaObject != null && metaObject.getOriginalObject() instanceof BaseEntity) {
+            BaseEntity baseEntity = (BaseEntity) metaObject.getOriginalObject();
+
+//            baseEntity.setCreateUser();
+            baseEntity.setCreateTime(LocalDateTime.now());
+            baseEntity.setDeleteFlag(0);
+            baseEntity.setVersion(1);
+        }
     }
 
     /**
@@ -35,6 +40,11 @@ public class MyBatisMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+        if (metaObject != null && metaObject.getOriginalObject() instanceof BaseEntity) {
+            BaseEntity baseEntity = (BaseEntity) metaObject.getOriginalObject();
+
+//            baseEntity.setUpdateUser();
+            baseEntity.setUpdateTime(LocalDateTime.now());
+        }
     }
 }

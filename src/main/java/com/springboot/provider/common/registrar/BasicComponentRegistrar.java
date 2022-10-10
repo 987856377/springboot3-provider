@@ -31,8 +31,7 @@ public class BasicComponentRegistrar implements ImportBeanDefinitionRegistrar {
         Set<String> packagesToScan = getPackagesToScan(importingClassMetadata);
         if (registry.containsBeanDefinition(BEAN_NAME)) {
             updatePostProcessor(registry, packagesToScan);
-        }
-        else {
+        } else {
             addPostProcessor(registry, packagesToScan);
         }
     }

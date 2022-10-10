@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 
 /*
-* ApplicationEventPublisherAware：
-* 用于获取ApplicationEventPublisher的一个扩展类，ApplicationEventPublisher可以用来发布事件，结合ApplicationListener来共同使用。
-* 这个对象也可以通过spring注入的方式来获得。
-* */
+ * ApplicationEventPublisherAware：
+ * 用于获取ApplicationEventPublisher的一个扩展类，ApplicationEventPublisher可以用来发布事件，结合ApplicationListener来共同使用。
+ * 这个对象也可以通过spring注入的方式来获得。
+ * */
 @Component
 public class ApplicationEventPublisherAwareHandler implements ApplicationEventPublisherAware {
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author XuZhenkui
@@ -20,7 +20,7 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
     List<User> getAllUser();
 
-    User getByUserId(@Param("id")Long id);
+    User getByUserId(@Param("id") Long id);
 
     /**
      * 批量插入 仅适用于mysql

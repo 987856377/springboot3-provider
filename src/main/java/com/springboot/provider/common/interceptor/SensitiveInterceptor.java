@@ -1,7 +1,6 @@
 package com.springboot.provider.common.interceptor;
 
 import cn.hutool.core.lang.id.NanoId;
-import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.springboot.provider.module.his.entity.User;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
@@ -17,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.Collection;
 import java.util.Properties;
 

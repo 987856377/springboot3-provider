@@ -31,7 +31,7 @@ public class WechatPayService extends AbstractPayService implements PayService {
 //    }
 
 
-//    3. 由抽象父类注册
+    //    3. 由抽象父类注册
     @Override
     public PayStrategy getStrategy() {
         return PayStrategy.WECHAT;

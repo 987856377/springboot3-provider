@@ -15,8 +15,9 @@ import java.nio.charset.StandardCharsets;
 public class ResourceUtils {
 
     /**
-     *  获取 resources 目录下的资源文件
-     *  ep: db/quartz_mysql.sql
+     * 获取 resources 目录下的资源文件
+     * ep: db/quartz_mysql.sql
+     *
      * @param fileName
      * @return
      */
@@ -35,8 +36,9 @@ public class ResourceUtils {
     }
 
     /**
-     *  获取 resources 目录下的资源文件
-     *  ep: db/quartz_mysql.sql
+     * 获取 resources 目录下的资源文件
+     * ep: db/quartz_mysql.sql
+     *
      * @param fileName
      * @return
      */

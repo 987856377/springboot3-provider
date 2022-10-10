@@ -5,9 +5,9 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Component;
 
 /*
-* MessageSourceAware：
-* 用于获取MessageSource的一个扩展类，MessageSource主要用来做国际化。
-* */
+ * MessageSourceAware：
+ * 用于获取MessageSource的一个扩展类，MessageSource主要用来做国际化。
+ * */
 @Component
 public class MessageSourceAwareHandler implements MessageSourceAware {
 

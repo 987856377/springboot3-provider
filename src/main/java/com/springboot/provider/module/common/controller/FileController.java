@@ -37,7 +37,7 @@ public class FileController {
     @RequestMapping(value = "/uploadSingle", method = RequestMethod.POST)
     public ResultJson singleFileUpload(MultipartFile file) {
         Map<String, Path> map = fileService.uploadSingle(file);
-        if (map.size() == 0){
+        if (map.size() == 0) {
             return ResultJson.failure(ResultCode.INTERNAL_SERVER_ERROR);
         }
         return ResultJson.success(map);
@@ -46,18 +46,18 @@ public class FileController {
     @RequestMapping(value = "/uploadMultipart", method = RequestMethod.POST)
     public ResultJson mulFileUpload(MultipartFile[] files) {
         Map<String, Path> map = fileService.uploadMultipart(files);
-        if (map.size() == 0){
+        if (map.size() == 0) {
             return ResultJson.failure(ResultCode.INTERNAL_SERVER_ERROR);
         }
         return ResultJson.success(map);
     }
 
-    @RequestMapping(value = "list",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResultJson downloadFileList() {
         return ResultJson.success(fileService.list());
     }
 
-    @RequestMapping(value = "download",method = RequestMethod.GET)
+    @RequestMapping(value = "download", method = RequestMethod.GET)
     public ResponseEntity<byte[]> download(@RequestParam("filename") String filename) {
         ResponseEntity<byte[]> responseEntity = null;
         try {
@@ -68,7 +68,7 @@ public class FileController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "downloadZipFile",method = RequestMethod.GET)
+    @RequestMapping(value = "downloadZipFile", method = RequestMethod.GET)
     public ResponseEntity<byte[]> downloadZipFile(@RequestParam("filePath") String filePath) {
         ResponseEntity<byte[]> responseEntity = null;
         try {
@@ -79,7 +79,7 @@ public class FileController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "downloadFile",method = RequestMethod.GET)
+    @RequestMapping(value = "downloadFile", method = RequestMethod.GET)
     public ResponseEntity<Resource> downloadFile(@RequestParam("filename") String filename) {
         ResponseEntity<Resource> responseEntity = null;
         try {

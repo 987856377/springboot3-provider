@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * xss过滤 配置属性
- *
  */
 @Component
 @ConfigurationProperties(prefix = "xss")

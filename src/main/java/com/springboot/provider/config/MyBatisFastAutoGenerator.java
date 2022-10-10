@@ -64,39 +64,39 @@ public class MyBatisFastAutoGenerator {
                 .packageConfig(builder -> {
                     builder.parent(BASE_PACKAGE) // 设置父包名
                             .moduleName(moduleName) // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, MAPPER_PATH + ORGANIZATION +  "/" + domain + "/" + moduleName + "/")); // 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, MAPPER_PATH + ORGANIZATION + "/" + domain + "/" + moduleName + "/")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.enableCapitalMode()
                             .addInclude(getTables(tables))
                             .entityBuilder()
                             .enableActiveRecord()
-//                                .superClass(com.baomidou.mybatisplus.extension.activerecord.Model.class)
-                                .disableSerialVersionUID()
-                                .enableChainModel()
-                                .idType(IdType.ASSIGN_ID)
-                                .enableTableFieldAnnotation()
-                                .naming(NamingStrategy.underline_to_camel)
-                                .columnNaming(NamingStrategy.underline_to_camel)
-                                .addTableFills(Arrays.asList(
-                                        new Column("create_time", FieldFill.INSERT),
-                                        new Column("update_time", FieldFill.UPDATE),
-                                        new Column("delete_flag", FieldFill.INSERT),
-                                        new Column("version", FieldFill.INSERT)
-                                ))
-                                .logicDeleteColumnName("delete_flag")
-                                .versionColumnName("version")
-                                .build()
+                            .superClass(com.springboot.provider.common.BaseEntity.class)
+                            .disableSerialVersionUID()
+                            .enableChainModel()
+                            .idType(IdType.ASSIGN_ID)
+                            .enableTableFieldAnnotation()
+                            .naming(NamingStrategy.underline_to_camel)
+                            .columnNaming(NamingStrategy.underline_to_camel)
+                            .addTableFills(Arrays.asList(
+                                    new Column("create_time", FieldFill.INSERT),
+                                    new Column("update_time", FieldFill.UPDATE),
+                                    new Column("delete_flag", FieldFill.INSERT),
+                                    new Column("version", FieldFill.INSERT)
+                            ))
+                            .logicDeleteColumnName("delete_flag")
+                            .versionColumnName("version")
+                            .build()
                             .mapperBuilder()
-                                .enableBaseColumnList()
-                                .enableBaseResultMap()
+                            .enableBaseColumnList()
+                            .enableBaseResultMap()
                             .serviceBuilder()
-                                .formatServiceFileName("%sService")
-                                .formatServiceImplFileName("%sServiceImpl")
+                            .formatServiceFileName("%sService")
+                            .formatServiceImplFileName("%sServiceImpl")
                             .controllerBuilder()
-                                .enableRestStyle()
-                                .enableHyphenStyle()
-                                .build();
+                            .enableRestStyle()
+                            .enableHyphenStyle()
+                            .build();
                 })
                 .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .execute();

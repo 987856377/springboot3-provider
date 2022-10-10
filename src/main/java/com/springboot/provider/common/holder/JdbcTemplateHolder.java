@@ -18,11 +18,12 @@ public class JdbcTemplateHolder {
 
     /**
      * 根据数据源名称获取数据源
+     *
      * @param dsName 数据库名称
      * @return
      */
-    public static JdbcTemplate getJdbcTemplate(String dsName){
-        if (StringUtils.hasText(dsName)){
+    public static JdbcTemplate getJdbcTemplate(String dsName) {
+        if (StringUtils.hasText(dsName)) {
             return JDBC_TEMPLATE_MAP.get(dsName);
         }
         return null;
@@ -30,11 +31,12 @@ public class JdbcTemplateHolder {
 
     /**
      * 添加数据源
-     * @param dsName 数据库名称
+     *
+     * @param dsName     数据库名称
      * @param dataSource 数据源
      */
-    public static Boolean addJdbcTemplate(String dsName, DataSource dataSource){
-        if (StringUtils.hasText(dsName) && dataSource != null){
+    public static Boolean addJdbcTemplate(String dsName, DataSource dataSource) {
+        if (StringUtils.hasText(dsName) && dataSource != null) {
 //        如果传入key对应的value已经存在，就返回存在的value，不进行替换。如果不存在，就添加key和value，返回null
             return JDBC_TEMPLATE_MAP.putIfAbsent(dsName, new JdbcTemplate(dataSource)) == null;
         }
@@ -43,11 +45,12 @@ public class JdbcTemplateHolder {
 
     /**
      * 修改数据源
-     * @param dsName 数据库名称
+     *
+     * @param dsName     数据库名称
      * @param dataSource 数据源
      */
-    public static Boolean updateJdbcTemplate(String dsName, DataSource dataSource){
-        if (StringUtils.hasText(dsName) && dataSource != null){
+    public static Boolean updateJdbcTemplate(String dsName, DataSource dataSource) {
+        if (StringUtils.hasText(dsName) && dataSource != null) {
             JDBC_TEMPLATE_MAP.put(dsName, new JdbcTemplate(dataSource));
             return true;
         }
@@ -56,11 +59,12 @@ public class JdbcTemplateHolder {
 
     /**
      * 删除数据源
-     * @param dsName 数据库名称
+     *
+     * @param dsName     数据库名称
      * @param dataSource 数据源
      */
-    public static Boolean removeJdbcTemplate(String dsName, DataSource dataSource){
-        if (StringUtils.hasText(dsName) && dataSource != null){
+    public static Boolean removeJdbcTemplate(String dsName, DataSource dataSource) {
+        if (StringUtils.hasText(dsName) && dataSource != null) {
             JDBC_TEMPLATE_MAP.remove(dsName);
             return true;
         }

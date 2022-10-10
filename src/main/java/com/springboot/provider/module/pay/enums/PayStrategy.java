@@ -1,7 +1,6 @@
 package com.springboot.provider.module.pay.enums;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
 
 /**
  * @program: springboot-provider

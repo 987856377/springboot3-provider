@@ -11,7 +11,6 @@ import java.util.Properties;
 
 /**
  * 校验框架配置类
- *
  */
 @Configuration
 public class ValidatorConfig {

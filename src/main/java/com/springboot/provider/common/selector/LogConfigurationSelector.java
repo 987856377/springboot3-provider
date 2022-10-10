@@ -1,7 +1,7 @@
 package com.springboot.provider.common.selector;
 
-import com.springboot.provider.common.selector.annotation.EnableLog;
 import com.springboot.provider.common.enums.LogMode;
+import com.springboot.provider.common.selector.annotation.EnableLog;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportSelector;

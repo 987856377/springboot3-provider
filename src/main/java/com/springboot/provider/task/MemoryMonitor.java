@@ -23,41 +23,41 @@ public class MemoryMonitor {
         scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
     }
 
-//    启动监控服务, 监控内存信息
-    public void start(){
-        logger.info(String.format("启动监控服务: %s",Thread.currentThread().getName()));
+    //    启动监控服务, 监控内存信息
+    public void start() {
+        logger.info(String.format("启动监控服务: %s", Thread.currentThread().getName()));
         scheduledExecutorService.scheduleWithFixedDelay(() -> logger.info(String.format("最大内存: %d M, 已分配内存: %d M, 已分配内存中剩余空间: %d M, 最大可用内存: %d M",
                 Runtime.getRuntime().maxMemory() / 1024 / 1024,
                 Runtime.getRuntime().maxMemory() / 1024 / 1024,
                 Runtime.getRuntime().maxMemory() / 1024 / 1024,
                 (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory() + Runtime.getRuntime().freeMemory()) / 1024 / 1024
-                )),0,30, TimeUnit.MINUTES);
+        )), 0, 30, TimeUnit.MINUTES);
 
     }
 
-//    释放资源(来源于 flume 源码)
+    //    释放资源(来源于 flume 源码)
 //    主要用于关闭线程池
-    public void stop(){
-        logger.info(String.format("开始关闭线程: %s",Thread.currentThread().getName()));
+    public void stop() {
+        logger.info(String.format("开始关闭线程: %s", Thread.currentThread().getName()));
         if (scheduledExecutorService != null) {
             scheduledExecutorService.shutdown();
             try {
-                scheduledExecutorService.awaitTermination(10,TimeUnit.SECONDS);
+                scheduledExecutorService.awaitTermination(10, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            if(!scheduledExecutorService.isTerminated()){
+            if (!scheduledExecutorService.isTerminated()) {
                 scheduledExecutorService.shutdownNow();
                 try {
-                    while (!scheduledExecutorService.isTerminated()){
-                        scheduledExecutorService.awaitTermination(10,TimeUnit.SECONDS);
+                    while (!scheduledExecutorService.isTerminated()) {
+                        scheduledExecutorService.awaitTermination(10, TimeUnit.SECONDS);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
-        logger.info(String.format("关闭线程: %s 完成",Thread.currentThread().getName()));
+        logger.info(String.format("关闭线程: %s 完成", Thread.currentThread().getName()));
     }
 }

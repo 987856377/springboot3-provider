@@ -7,11 +7,11 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.stereotype.Component;
 
 /*
-* org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor
-* 这个接口在读取项目中的beanDefinition之后执行，提供一个补充的扩展点
-*
-* 使用场景：你可以在这里动态注册自己的beanDefinition，可以加载classpath之外的bean
-* */
+ * org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor
+ * 这个接口在读取项目中的beanDefinition之后执行，提供一个补充的扩展点
+ *
+ * 使用场景：你可以在这里动态注册自己的beanDefinition，可以加载classpath之外的bean
+ * */
 @Component
 public class BeanDefinitionRegistryPostProcessorHandler implements BeanDefinitionRegistryPostProcessor {
     /**

@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * 防止XSS攻击的过滤器
- *
  */
 public class XssFilter implements Filter {
     /**
@@ -32,7 +31,7 @@ public class XssFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         if (handleExcludeURL(req, resp)) {

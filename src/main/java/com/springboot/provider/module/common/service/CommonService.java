@@ -1,10 +1,6 @@
 package com.springboot.provider.module.common.service;
 
 
-import com.springboot.provider.module.his.entity.User;
-
-import java.util.List;
-
 /**
  * @program: springboot-provider
  * @package com.springboot.provider.module.common.service

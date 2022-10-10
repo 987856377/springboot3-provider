@@ -11,11 +11,13 @@ import java.util.Map;
 
 public interface FileService {
     Map<String, Path> uploadSingle(MultipartFile file);
+
     Map<String, Path> uploadMultipart(MultipartFile[] files);
 
     Map<String, Path> list();
 
     ResponseEntity<byte[]> download(String filename) throws IOException;
+
     ResponseEntity<Resource> downloadFile(String filename) throws MalformedURLException;
 
     ResponseEntity<byte[]> downloadZipFile(String filePath) throws IOException;

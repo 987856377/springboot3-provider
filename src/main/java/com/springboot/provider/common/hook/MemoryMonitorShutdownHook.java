@@ -22,13 +22,13 @@ public class MemoryMonitorShutdownHook {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostConstruct
-    protected void init(){
+    protected void init() {
         MemoryMonitor memoryMonitor = new MemoryMonitor();
         memoryMonitor.start();
 
 //        添加钩子, 实现优雅停服
         final MemoryMonitor appReference = memoryMonitor;
-        Runtime.getRuntime().addShutdownHook(new Thread("memory-monitor-shutdown-hook"){
+        Runtime.getRuntime().addShutdownHook(new Thread("memory-monitor-shutdown-hook") {
             @Override
             public void run() {
                 logger.info(Thread.currentThread().getName() + " 线程接收到退出信号, 开始释放资源...");
@@ -44,11 +44,11 @@ public class MemoryMonitorShutdownHook {
                     e.printStackTrace();
                 }
                 logger.info("threadPoolExecutor.isTerminated() = " + threadPoolExecutor.isTerminated());
-                if(!threadPoolExecutor.isTerminated()){
+                if (!threadPoolExecutor.isTerminated()) {
                     threadPoolExecutor.shutdownNow();
                     try {
-                        while (!threadPoolExecutor.isTerminated()){
-                            threadPoolExecutor.awaitTermination(10,TimeUnit.SECONDS);
+                        while (!threadPoolExecutor.isTerminated()) {
+                            threadPoolExecutor.awaitTermination(10, TimeUnit.SECONDS);
                             logger.info("threadPoolExecutor.isTerminated() = " + threadPoolExecutor.isTerminated());
                         }
                     } catch (InterruptedException e) {

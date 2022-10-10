@@ -30,7 +30,7 @@ public class UnionPayService extends AbstractPayService implements PayService {
 //        PayStrategyFactory.register(PayStrategy.UNION, this);
 //    }
 
-//    3. 由抽象父类注册
+    //    3. 由抽象父类注册
     @Override
     public PayStrategy getStrategy() {
         return PayStrategy.UNION;

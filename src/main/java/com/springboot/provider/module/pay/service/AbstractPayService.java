@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractPayService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//    1. 使用构造函数注册
+    //    1. 使用构造函数注册
     public AbstractPayService() {
         PayStrategyFactory.register(getStrategy(), getService());
     }

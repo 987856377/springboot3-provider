@@ -22,6 +22,7 @@ public @interface BasicComponentScan {
      * Alias for the {@link #basePackages()} attribute. Allows for more concise annotation
      * declarations e.g.: {@code @ServletComponentScan("org.my.pkg")} instead of
      * {@code @ServletComponentScan(basePackages="org.my.pkg")}.
+     *
      * @return the base packages to scan
      */
     @AliasFor("basePackages")
@@ -33,6 +34,7 @@ public @interface BasicComponentScan {
      * <p>
      * Use {@link #basePackageClasses()} for a type-safe alternative to String-based
      * package names.
+     *
      * @return the base packages to scan
      */
     @AliasFor("value")
@@ -42,6 +44,7 @@ public @interface BasicComponentScan {
      * Type-safe alternative to {@link #basePackages()} for specifying the packages to
      * scan for annotated servlet components. The package of each class specified will be
      * scanned.
+     *
      * @return classes from the base packages to scan
      */
     Class<?>[] basePackageClasses() default {};

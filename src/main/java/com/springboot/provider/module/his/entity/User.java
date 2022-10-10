@@ -1,13 +1,12 @@
 package com.springboot.provider.module.his.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.springboot.provider.common.BaseEntity;
 import com.springboot.provider.common.handler.SensitiveHandler;
 import com.springboot.provider.common.jackson.Sensitive;
 import com.springboot.provider.common.jackson.SensitiveMode;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -18,13 +17,7 @@ import java.time.LocalDateTime;
  * @since 2020-12-10
  */
 @TableName(value = "user", autoResultMap = true)
-public class User extends Model<User> {
-
-    private static final long serialVersionUID = 1L;
-
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    @NotNull(message = "用户ID不能为空")
-    private Long id;
+public class User extends BaseEntity<User> {
 
     @Sensitive(maskFunc = SensitiveMode.MID)
     @TableField("username")
@@ -33,30 +26,6 @@ public class User extends Model<User> {
 
     @TableField(value = "password", typeHandler = SensitiveHandler.class)
     private String password;
-
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    @TableField(value = "update_time", fill = FieldFill.UPDATE)
-    private LocalDateTime updateTime;
-
-    private Integer status;
-
-    @TableLogic
-    @TableField(value = "delete_flag", fill = FieldFill.INSERT)
-    private Integer deleteFlag;
-
-    @Version
-    @TableField(value = "version", fill = FieldFill.INSERT)
-    private Integer version;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -74,57 +43,12 @@ public class User extends Model<User> {
         this.password = password;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Integer deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", status=" + status +
-                ", deleteFlag=" + deleteFlag +
-                ", version=" + version +
                 "} " + super.toString();
     }
 }

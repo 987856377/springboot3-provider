@@ -28,7 +28,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
@@ -36,20 +36,20 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .headers()
-                    .frameOptions()
-                    // .disable(); // 任何跨域
-                    .sameOrigin() // 同源跨域
+                .frameOptions()
+                // .disable(); // 任何跨域
+                .sameOrigin() // 同源跨域
                 .and()
-                    .cors()
+                .cors()
                 .and()
-                    .csrf().disable()
+                .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                    .antMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
-                    .antMatchers("/user/**").hasRole("USER")
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/file/**").hasAnyRole("USER","ADMIN")
-                    .anyRequest().authenticated();
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
+                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/file/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated();
 //                .and()
 //                    .formLogin()
 //                    .loginPage("/page/login.ftlh")
@@ -86,7 +86,7 @@ public class WebSecurityConfig {
      * 如果角色层级关系是连续的，也可以这样配置 ROLE_A > ROLE_B > ROLE_C > ROLE_D。
      * */
     @Bean
-    RoleHierarchy roleHierarchy(){
+    RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
         return hierarchy;
