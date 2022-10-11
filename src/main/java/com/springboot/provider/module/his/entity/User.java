@@ -3,9 +3,10 @@ package com.springboot.provider.module.his.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.provider.common.BaseEntity;
+import com.springboot.provider.common.filter.xss.Xss;
 import com.springboot.provider.common.handler.SensitiveHandler;
-import com.springboot.provider.common.jackson.Sensitive;
-import com.springboot.provider.common.jackson.SensitiveMode;
+import com.springboot.provider.common.jackson.sensitive2.Sensitive;
+import com.springboot.provider.common.jackson.sensitive2.SensitiveStrategy;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -19,7 +20,9 @@ import jakarta.validation.constraints.NotNull;
 @TableName(value = "user", autoResultMap = true)
 public class User extends BaseEntity<User> {
 
-    @Sensitive(maskFunc = SensitiveMode.MID)
+    @Xss(message = "用户账号不能包含脚本字符")
+//    @Sensitive(maskFunc = SensitiveMode.MID)
+    @Sensitive(strategy = SensitiveStrategy.PASSWORD)
     @TableField("username")
     @NotNull(message = "用户名不能为空")
     private String username;

@@ -1,4 +1,4 @@
-package com.springboot.provider.common.jackson;
+package com.springboot.provider.common.jackson.sensitive1;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JavaType;

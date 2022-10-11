@@ -1,4 +1,4 @@
-package com.springboot.provider.common.jackson;
+package com.springboot.provider.common.jackson.sensitive1;
 
 import java.lang.annotation.*;
 
