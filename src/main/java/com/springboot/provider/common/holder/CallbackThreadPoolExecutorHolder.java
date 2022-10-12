@@ -34,7 +34,7 @@ public class CallbackThreadPoolExecutorHolder {
     private static ListeningExecutorService threadPoolExecutor = MoreExecutors.listeningDecorator(
             new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
                     KEEP_ALIVE_TIME, TIME_UNIT,
-                    WORK_QUEUE, THREAD_FACTORY, new ThreadPoolExecutor.AbortPolicy()));
+                    WORK_QUEUE, THREAD_FACTORY, new ThreadPoolExecutor.CallerRunsPolicy()));
 
     public static ListeningExecutorService getThreadPoolExecutor() {
         return threadPoolExecutor;
