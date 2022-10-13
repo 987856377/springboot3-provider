@@ -78,6 +78,18 @@ public class Application {
         return restTemplateBuilder.build();
     }
 
+//    @Bean
+//    public Compressor compressor() throws InstantiationException, IllegalAccessException {
+//        Compressor instance = null;
+//        ServiceLoader<Compressor> compressors = ServiceLoader.load(Compressor.class);
+//        for (Compressor compressor : compressors) {
+//            Class<? extends Compressor> aClass = compressor.getClass();
+//            instance = aClass.newInstance();
+//            break;
+//        }
+//        return instance;
+//    }
+
     @Bean
     public SymmetricCrypto symmetricCrypto() {
         return SmUtil.sm4(key.getBytes(StandardCharsets.UTF_8));

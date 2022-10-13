@@ -30,7 +30,8 @@ public class DecryptJsonDeserializer extends JsonDeserializer<String> implements
             if (function != null) {
                 return function.apply(p.getValueAsString());
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return null;
     }
 

@@ -13,6 +13,8 @@ import com.springboot.provider.common.event.ApplicationNotifyEvent;
 import com.springboot.provider.common.holder.ApplicationContextDataSourceHolder;
 import com.springboot.provider.common.holder.CallbackThreadPoolExecutorHolder;
 import com.springboot.provider.common.proxy.JdbcOperationsProxy;
+import com.springboot.provider.common.spi.complex.agent.core.spi.AgentTypedSPIRegistry;
+import com.springboot.provider.common.spi.demo.Compressor;
 import com.springboot.provider.common.utils.PropertyUtils;
 import com.springboot.provider.common.utils.ResourceUtils;
 import com.springboot.provider.module.common.service.CommonService;
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +70,8 @@ public class CommonController {
     private final PayService payService;
 
     private final HttpFeignClientService httpFeignClientService;
+
+//    private final Compressor compressor;
 
     public CommonController(ApplicationEventPublisher applicationEventPublisher, ServletContext servletContext,
                             CommonService commonService, RestTemplate restTemplate,
@@ -251,6 +256,13 @@ public class CommonController {
             return ResultJson.success("consume: " + id + " success, Container might contain 1: " + b);
         }
         return ResultJson.failure(ResultCode.SERVICE_UNAVAILABLE, "access too frequently");
+    }
+
+    @RequestMapping(value = "/test/spi/{param}")
+    public ResultJson spi(@PathVariable String param) {
+        Compressor compressor = AgentTypedSPIRegistry.getRegisteredService(Compressor.class, "GZIP");
+        byte[] compress = compressor.compress(param.getBytes(StandardCharsets.UTF_8));
+        return ResultJson.success(new String(compress));
     }
 
 }
