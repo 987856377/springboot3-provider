@@ -1,6 +1,6 @@
-package com.springboot.provider.common.spi.demo.impl;
+package com.springboot.provider.common.spi.demo.compress.impl;
 
-import com.springboot.provider.common.spi.demo.Compressor;
+import com.springboot.provider.common.spi.demo.compress.Compressor;
 
 import java.nio.charset.StandardCharsets;
 

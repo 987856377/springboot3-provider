@@ -14,7 +14,11 @@ import com.springboot.provider.common.holder.ApplicationContextDataSourceHolder;
 import com.springboot.provider.common.holder.CallbackThreadPoolExecutorHolder;
 import com.springboot.provider.common.proxy.JdbcOperationsProxy;
 import com.springboot.provider.common.spi.complex.agent.core.spi.AgentTypedSPIRegistry;
-import com.springboot.provider.common.spi.demo.Compressor;
+import com.springboot.provider.common.spi.demo.algorithm.AlgorithmConfiguration;
+import com.springboot.provider.common.spi.demo.algorithm.encrypt.EncryptAlgorithm;
+import com.springboot.provider.common.spi.demo.algorithm.encrypt.context.EncryptContext;
+import com.springboot.provider.common.spi.demo.algorithm.encrypt.factory.EncryptAlgorithmFactory;
+import com.springboot.provider.common.spi.demo.compress.Compressor;
 import com.springboot.provider.common.utils.PropertyUtils;
 import com.springboot.provider.common.utils.ResourceUtils;
 import com.springboot.provider.module.common.service.CommonService;
@@ -45,6 +49,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -263,6 +268,21 @@ public class CommonController {
         Compressor compressor = AgentTypedSPIRegistry.getRegisteredService(Compressor.class, "GZIP");
         byte[] compress = compressor.compress(param.getBytes(StandardCharsets.UTF_8));
         return ResultJson.success(new String(compress));
+    }
+
+    @RequestMapping(value = "/test/spi/algorithm/{type}/{param}")
+    public ResultJson algorithm(@PathVariable String type, @PathVariable String param) {
+        EncryptAlgorithm<Object, String> algorithm = EncryptAlgorithmFactory.newInstance(new AlgorithmConfiguration("SM4", createECBProperties()));
+        EncryptContext encryptContext = new EncryptContext("test", "test", "test", "name");
+        return ResultJson.success("enc".equals(type) ? algorithm.encrypt(param, encryptContext): algorithm.decrypt(param, encryptContext));
+    }
+
+    private Properties createECBProperties() {
+        Properties result = new Properties();
+        result.setProperty("sm4-key", "4D744E003D713D054E7E407C350E447E");
+        result.setProperty("sm4-mode", "ECB");
+        result.setProperty("sm4-padding", "PKCS5Padding");
+        return result;
     }
 
 }

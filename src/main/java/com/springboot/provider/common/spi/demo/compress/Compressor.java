@@ -1,4 +1,4 @@
-package com.springboot.provider.common.spi.demo;
+package com.springboot.provider.common.spi.demo.compress;
 
 
 import com.springboot.provider.common.spi.complex.agent.api.spi.type.AgentTypedSPI;
