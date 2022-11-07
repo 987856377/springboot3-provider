@@ -69,13 +69,14 @@ public class Application {
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
-        restTemplateBuilder.additionalMessageConverters(mappingJackson2HttpMessageConverter);
-        restTemplateBuilder.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        restTemplateBuilder.requestFactory(SSL::new);
-        return restTemplateBuilder.build();
+//        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+//        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+//        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
+//        restTemplateBuilder.additionalMessageConverters(mappingJackson2HttpMessageConverter);
+//        restTemplateBuilder.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+//        restTemplateBuilder.requestFactory(SSL::new);
+//        return restTemplateBuilder.build();
+        return new RestTemplate(new SSL());
     }
 
 //    @Bean
