@@ -4,7 +4,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.provider.common.filter.RepeatedlyRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class HttpRequestHandlerInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final Gson gson = new Gson();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final TransmittableThreadLocal<StopWatch> invokeTimeTL = new TransmittableThreadLocal<>();
     private final TransmittableThreadLocal<String> invokeIdTL = new TransmittableThreadLocal<>();
@@ -51,7 +51,7 @@ public class HttpRequestHandlerInterceptor implements HandlerInterceptor {
         } else {
             Map<String, String[]> parameterMap = request.getParameterMap();
             if (MapUtil.isNotEmpty(parameterMap)) {
-                String parameters = gson.toJson(parameterMap);
+                String parameters = objectMapper.writeValueAsString(parameterMap);
                 logger.info("InvokeId: {}, Request URL: {}, Param Parameter: {}", invokeId, url, parameters);
             } else {
                 logger.info("InvokeId: {}, Request URL: {}, No Parameter", invokeId, url);

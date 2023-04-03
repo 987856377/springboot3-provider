@@ -32,6 +32,10 @@ public class AppPayProperties {
         this.appSecret = appSecret;
     }
 
+    public void display() {
+        System.out.println(this);
+    }
+
     @Override
     public String toString() {
         return "AppPayProperties{" +

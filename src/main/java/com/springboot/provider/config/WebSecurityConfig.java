@@ -43,12 +43,12 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
-                .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/file/**").hasAnyRole("USER", "ADMIN")
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
+                .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/file/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated();
 //                .and()
 //                    .formLogin()
@@ -68,7 +68,7 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+        return (web) -> web.ignoring().requestMatchers(HttpMethod.OPTIONS, "/**");
     }
 
     @Bean

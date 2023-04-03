@@ -1,6 +1,5 @@
 package com.springboot.provider.module.common.websocket;
 
-import com.google.gson.Gson;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
@@ -31,8 +30,6 @@ public class WebSocketServer {
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
-
-    private static final Gson GSON = new Gson();
 
     /**
      * 连接建立成功调用的方法
@@ -141,12 +138,12 @@ public class WebSocketServer {
             if ("0".equals(message.getReceiveUserId())) {
                 WEB_SOCKET_SERVER_MAP.forEach((key, webSocketServers) -> {
                     webSocketServers.forEach(webSocketServer -> {
-                        webSocketServer.sendMessage(GSON.toJson(message));
+                        webSocketServer.sendMessage(message.getContent());
                     });
                 });
             } else if (WEB_SOCKET_SERVER_MAP.get(message.getReceiveUserId()) != null) {
                 WEB_SOCKET_SERVER_MAP.get(message.getReceiveUserId()).forEach(webSocketServer -> {
-                    webSocketServer.sendMessage(GSON.toJson(message));
+                    webSocketServer.sendMessage(message.getContent());
                 });
             } else {
                 LOGGER.error("没有找到消息发送的目标对象");

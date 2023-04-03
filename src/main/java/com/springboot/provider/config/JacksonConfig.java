@@ -1,7 +1,11 @@
 package com.springboot.provider.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -35,6 +39,17 @@ public class JacksonConfig {
     @Bean
     public ObjectMapper getObjectMapper(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder, JacksonProperties jacksonProperties) {
         ObjectMapper objectMapper = jackson2ObjectMapperBuilder.createXmlMapper(false).build();
+        // 对于空的对象转json的时候不抛出错误
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        // 允许属性名称没有引号
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        // 允许单引号
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        // 设置输入时忽略在json字符串中存在但在java对象实际没有的属性
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // 设置输出时包含属性的风格
+        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+
         // 全局配置序列化返回 JSON 处理
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, BigNumberSerializer.INSTANCE);

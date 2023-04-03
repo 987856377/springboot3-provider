@@ -27,7 +27,7 @@ public class CallbackThreadPoolExecutorHolder {
 
     private final static TimeUnit TIME_UNIT = TimeUnit.SECONDS;
 
-    private final static BlockingQueue<Runnable> WORK_QUEUE = new LinkedBlockingQueue<>(5);
+    private final static BlockingQueue<Runnable> WORK_QUEUE = new LinkedBlockingQueue<>(CORE_POOL_SIZE * 100);
 
     private final static ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setNameFormat(CallbackThreadPoolExecutorHolder.class.getName() + "-pool-%d").build();
 

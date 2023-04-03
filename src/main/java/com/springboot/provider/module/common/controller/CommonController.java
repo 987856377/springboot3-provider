@@ -21,6 +21,7 @@ import com.springboot.provider.common.spi.demo.algorithm.encrypt.factory.Encrypt
 import com.springboot.provider.common.spi.demo.compress.Compressor;
 import com.springboot.provider.common.utils.PropertyUtils;
 import com.springboot.provider.common.utils.ResourceUtils;
+import com.springboot.provider.module.common.AppPayProperties;
 import com.springboot.provider.module.common.service.CommonService;
 import com.springboot.provider.module.common.service.HttpFeignClientService;
 import com.springboot.provider.module.common.service.PayService;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -275,6 +277,26 @@ public class CommonController {
         EncryptAlgorithm<Object, String> algorithm = EncryptAlgorithmFactory.newInstance(new AlgorithmConfiguration("SM4", createECBProperties()));
         EncryptContext encryptContext = new EncryptContext("test", "test", "test", "name");
         return ResultJson.success("enc".equals(type) ? algorithm.encrypt(param, encryptContext): algorithm.decrypt(param, encryptContext));
+    }
+
+    @RequestMapping(value = "/test/javassist")
+    public ResultJson javassist(@RequestParam("a") int a, @RequestParam("b") int b) {
+        try {
+            AppPayProperties obj = new AppPayProperties();
+
+//            // 调用display方法
+            Method display = AppPayProperties.class.getDeclaredMethod("display");
+            display.invoke(obj);
+
+            // 调用calc方法
+            Method calc = AppPayProperties.class.getDeclaredMethod("calc", int.class, int.class);
+            Object result = calc.invoke(obj, a, b);
+
+            return ResultJson.success(result);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return ResultJson.success();
     }
 
     private Properties createECBProperties() {
