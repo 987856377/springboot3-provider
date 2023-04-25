@@ -22,9 +22,9 @@ public class BootstrapRegistryInitializerHandler implements BootstrapRegistryIni
         System.out.println("[BootstrapRegistryInitializer] initialize");
 
         ClassPool pool = ClassPool.getDefault();
+        pool.appendClassPath(new ClassClassPath(this.getClass()));
         try {
             String classname = "com.springboot.provider.module.common.AppPayProperties";
-            pool.insertClassPath(new ClassClassPath(this.getClass()));
             CtClass ctClass = pool.get(classname);
 
             // 在display后追加一行
