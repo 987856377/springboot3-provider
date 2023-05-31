@@ -9,12 +9,15 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
 
 /**
  * @Description
@@ -35,32 +38,20 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .headers()
-                .frameOptions()
-                // .disable(); // 任何跨域
-                .sameOrigin() // 同源跨域
-                .and()
-                .cors()
-                .and()
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
-                .requestMatchers("/user/**").hasRole("USER")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/file/**").hasAnyRole("USER", "ADMIN")
-                .anyRequest().authenticated();
-//                .and()
-//                    .formLogin()
-//                    .loginPage("/page/login.ftlh")
-//                    .successForwardUrl("/index.ftlh")
-//                    .permitAll();
-//                .and()
-//                    .logout()
-//                    .deleteCookies()
-//                    .invalidateHttpSession(true)
-//                    .clearAuthentication(true)
-//                    .permitAll();
+                .headers(headers -> {
+                    headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin);// 同源跨域
+                    // .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);// 任何跨域
+                })
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(requests -> {
+                    requests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                            .requestMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
+                            .requestMatchers("/user/**").hasRole("USER")
+                            .requestMatchers("/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/file/**").hasAnyRole("USER", "ADMIN")
+                            .anyRequest().authenticated();
+                });
 
         http.httpBasic(Customizer.withDefaults());
         return http.build();
