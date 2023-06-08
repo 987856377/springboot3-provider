@@ -31,7 +31,7 @@
         <file>${path}/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天一归档 -->
-            <fileNamePattern>${path}/debug.log.%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
+            <fileNamePattern>${path}/%d{yyyy-MM-dd}/debug/%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
             <maxHistory>${maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -53,7 +53,7 @@
         <file>${path}/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天一归档 -->
-            <fileNamePattern>${path}/info.log.%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
+            <fileNamePattern>${path}/%d{yyyy-MM-dd}/info/%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
             <maxHistory>${maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -75,7 +75,7 @@
         <file>${path}/warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天一归档 -->
-            <fileNamePattern>${path}/warn.log.%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
+            <fileNamePattern>${path}/%d{yyyy-MM-dd}/warn/%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
             <maxHistory>${maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -98,7 +98,7 @@
         <file>${path}/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天一归档 -->
-            <fileNamePattern>${path}/error.log.%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
+            <fileNamePattern>${path}/%d{yyyy-MM-dd}/error/%d{yyyy-MM-dd}-%i.zip</fileNamePattern>
             <maxHistory>${maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
