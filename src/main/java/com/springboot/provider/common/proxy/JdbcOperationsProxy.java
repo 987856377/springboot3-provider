@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 import javax.sql.DataSource;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -66,8 +67,14 @@ public class JdbcOperationsProxy {
                 sql.set((String) item);
             } else if (item instanceof Object[]) {
                 Arrays.stream(((Object[]) item)).forEach(data -> {
-                    String value = Matcher.quoteReplacement(String.valueOf(data));
-                    sql.updateAndGet(s -> s.replaceFirst("\\?", StringUtils.center(value, value.length() + 2, "'")));
+                    if (data instanceof String) {
+                        String value = Matcher.quoteReplacement(String.valueOf(data));
+                        sql.updateAndGet(s -> s.replaceFirst("\\?", StringUtils.center(value, value.length() + 2, "'")));
+                    } else if (data instanceof Collection) {
+                        sql.updateAndGet(s -> s.replaceFirst("\\?", String.valueOf(data).replaceAll("\\[", "").replaceAll("]", "")));
+                    } else {
+                        sql.updateAndGet(s -> s.replaceFirst("\\?", String.valueOf(data)));
+                    }
                 });
             } else if (item instanceof PreparedStatementCreator && item instanceof PreparedStatementSetter
                     && item instanceof SqlProvider && item instanceof ParameterDisposer) {
