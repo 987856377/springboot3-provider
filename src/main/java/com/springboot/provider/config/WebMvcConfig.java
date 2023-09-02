@@ -1,12 +1,14 @@
 package com.springboot.provider.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.springboot.provider.common.interceptor.HttpRequestHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
@@ -21,9 +23,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     private String file;
 
     private final ObjectMapper objectMapper;
+    private final XmlMapper xmlMapper;
 
-    public WebMvcConfig(ObjectMapper objectMapper) {
+    public WebMvcConfig(ObjectMapper objectMapper, XmlMapper xmlMapper) {
         this.objectMapper = objectMapper;
+        this.xmlMapper = xmlMapper;
     }
 
     /**
@@ -91,6 +95,9 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         converters.forEach(converter -> {
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 ((MappingJackson2HttpMessageConverter) converter).setObjectMapper(objectMapper);
+            }
+            if (converter instanceof MappingJackson2XmlHttpMessageConverter) {
+                ((MappingJackson2XmlHttpMessageConverter) converter).setObjectMapper(xmlMapper);
             }
         });
     }

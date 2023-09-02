@@ -1,7 +1,6 @@
 package com.springboot.provider.common.spi.demo.compress;
 
-
-import com.springboot.provider.common.spi.complex.agent.api.spi.type.AgentTypedSPI;
+import com.springboot.provider.common.spi.simple.agent.type.AgentTypedSPI;
 
 public interface Compressor extends AgentTypedSPI {
     byte[] compress(byte[] bytes);

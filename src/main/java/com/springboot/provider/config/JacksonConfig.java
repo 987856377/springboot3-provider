@@ -1,14 +1,12 @@
 package com.springboot.provider.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.springboot.provider.common.jackson.BigNumberSerializer;
@@ -37,18 +35,8 @@ public class JacksonConfig {
 
     @Primary
     @Bean
-    public ObjectMapper getObjectMapper(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder, JacksonProperties jacksonProperties) {
+    public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder, JacksonProperties jacksonProperties) {
         ObjectMapper objectMapper = jackson2ObjectMapperBuilder.createXmlMapper(false).build();
-        // 对于空的对象转json的时候不抛出错误
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        // 允许属性名称没有引号
-        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        // 允许单引号
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        // 设置输入时忽略在json字符串中存在但在java对象实际没有的属性
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        // 设置输出时包含属性的风格
-        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
 
         // 全局配置序列化返回 JSON 处理
         SimpleModule simpleModule = new SimpleModule();
@@ -67,5 +55,30 @@ public class JacksonConfig {
         objectMapper.setAnnotationIntrospector(newAi);
 
         return objectMapper;
+    }
+
+    @Bean
+    public XmlMapper xmlMapper(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder, JacksonProperties jacksonProperties) {
+        XmlMapper xmlMapper = jackson2ObjectMapperBuilder.createXmlMapper(true).build();
+
+        xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
+
+        // 全局配置序列化返回 XML 处理
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Long.class, BigNumberSerializer.INSTANCE);
+        simpleModule.addSerializer(Long.TYPE, BigNumberSerializer.INSTANCE);
+        simpleModule.addSerializer(BigInteger.class, BigNumberSerializer.INSTANCE);
+        simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(jacksonProperties.getDateFormat());
+        simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
+        simpleModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
+        xmlMapper.registerModule(simpleModule);
+        xmlMapper.setTimeZone(TimeZone.getDefault());
+
+        AnnotationIntrospector ai = xmlMapper.getSerializationConfig().getAnnotationIntrospector();
+        AnnotationIntrospector newAi = AnnotationIntrospectorPair.pair(ai, new SensitiveAnnotationIntrospector());
+        xmlMapper.setAnnotationIntrospector(newAi);
+
+        return xmlMapper;
     }
 }

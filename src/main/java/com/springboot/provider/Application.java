@@ -3,7 +3,6 @@ package com.springboot.provider;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.springboot.mjt.annotation.EnableMappingJdbcTemplate;
-import com.springboot.mjt.annotation.MjtMapperScan;
 import com.springboot.provider.common.selector.annotation.EnableBeans;
 import com.springboot.provider.config.SSL;
 import org.slf4j.Logger;
@@ -12,21 +11,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collections;
 
 //@EnableHttps
-@EnableFeignClients
 // 自定义数据源一定要排除SpringBoot自动配置数据源，不然会出现循环引用的问题，The dependencies of some of the beans in the application context form a cycle
 @SpringBootApplication/*(exclude = {DataSourceAutoConfiguration.class})*/
 @EnableBeans(packages = "com.springboot.provider.module.his.entity")
@@ -70,14 +63,15 @@ public class Application {
 
     @Bean
     public RestTemplate restTemplate() {
-//        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-//        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-//        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
-//        restTemplateBuilder.additionalMessageConverters(mappingJackson2HttpMessageConverter);
-//        restTemplateBuilder.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8));
-//        restTemplateBuilder.requestFactory(SSL::new);
-//        return restTemplateBuilder.build();
-        return new RestTemplate(new SSL());
+        RestTemplate restTemplate = new RestTemplate(new SSL());
+
+        restTemplate.getMessageConverters().forEach(messageConverter -> {
+            if (messageConverter instanceof AbstractHttpMessageConverter) {
+                ((AbstractHttpMessageConverter<?>) messageConverter).setDefaultCharset(StandardCharsets.UTF_8);
+            }
+        });
+
+        return restTemplate;
     }
 
 //    @Bean

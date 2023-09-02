@@ -13,17 +13,16 @@ import com.springboot.provider.common.event.ApplicationNotifyEvent;
 import com.springboot.provider.common.holder.ApplicationContextDataSourceHolder;
 import com.springboot.provider.common.holder.CallbackThreadPoolExecutorHolder;
 import com.springboot.provider.common.proxy.JdbcOperationsProxy;
-import com.springboot.provider.common.spi.complex.agent.core.spi.AgentTypedSPIRegistry;
 import com.springboot.provider.common.spi.demo.algorithm.AlgorithmConfiguration;
 import com.springboot.provider.common.spi.demo.algorithm.encrypt.EncryptAlgorithm;
 import com.springboot.provider.common.spi.demo.algorithm.encrypt.context.EncryptContext;
 import com.springboot.provider.common.spi.demo.algorithm.encrypt.factory.EncryptAlgorithmFactory;
 import com.springboot.provider.common.spi.demo.compress.Compressor;
+import com.springboot.provider.common.spi.simple.agent.AgentTypedSPIRegistry;
 import com.springboot.provider.common.utils.PropertyUtils;
 import com.springboot.provider.common.utils.ResourceUtils;
 import com.springboot.provider.module.common.AppPayProperties;
 import com.springboot.provider.module.common.service.CommonService;
-import com.springboot.provider.module.common.service.HttpFeignClientService;
 import com.springboot.provider.module.common.service.PayService;
 import com.springboot.provider.module.his.entity.User;
 import com.springboot.provider.module.lis.entity.Role;
@@ -37,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -76,19 +76,15 @@ public class CommonController {
 
     private final PayService payService;
 
-    private final HttpFeignClientService httpFeignClientService;
-
 //    private final Compressor compressor;
 
     public CommonController(ApplicationEventPublisher applicationEventPublisher, ServletContext servletContext,
-                            CommonService commonService, RestTemplate restTemplate,
-                            PayService payService, HttpFeignClientService httpFeignClientService) {
+                            CommonService commonService, RestTemplate restTemplate, PayService payService) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.servletContext = servletContext;
         this.commonService = commonService;
         this.restTemplate = restTemplate;
         this.payService = payService;
-        this.httpFeignClientService = httpFeignClientService;
     }
 
     /*
@@ -206,16 +202,6 @@ public class CommonController {
         return payService.pay();
     }
 
-    @RequestMapping("/test/batchDataSourceItemReaderJob")
-    public String batchDataSourceItemReaderJob() {
-        return httpFeignClientService.batchDataSourceItemReaderJob();
-    }
-
-    @RequestMapping("/test/getUser")
-    public ResultJson<User> getUser(@RequestBody User user) {
-        return httpFeignClientService.getUser(user);
-    }
-
     @OptionLog(mode = 1, source = "api")
     @RequestMapping(value = "/test/xml", method = RequestMethod.POST, produces = {"application/xml;charset=utf-8"})
     public String xml(@RequestBody String xml) {
@@ -265,6 +251,18 @@ public class CommonController {
         return ResultJson.failure(ResultCode.SERVICE_UNAVAILABLE, "access too frequently");
     }
 
+    @RequestMapping(value = "/test/spi/factory/{param}")
+    public ResultJson factory(@PathVariable String param) {
+        List<Compressor> compressors = SpringFactoriesLoader.loadFactories(Compressor.class, null);
+        for (Compressor compressor : compressors) {
+            if ("GZIP".equals(compressor.getType())) {
+                byte[] compress = compressor.compress(param.getBytes(StandardCharsets.UTF_8));
+                return ResultJson.success(new String(compress));
+            }
+        }
+        return null;
+    }
+
     @RequestMapping(value = "/test/spi/{param}")
     public ResultJson spi(@PathVariable String param) {
         Compressor compressor = AgentTypedSPIRegistry.getRegisteredService(Compressor.class, "GZIP");
@@ -276,7 +274,7 @@ public class CommonController {
     public ResultJson algorithm(@PathVariable String type, @PathVariable String param) {
         EncryptAlgorithm<Object, String> algorithm = EncryptAlgorithmFactory.newInstance(new AlgorithmConfiguration("SM4", createECBProperties()));
         EncryptContext encryptContext = new EncryptContext("test", "test", "test", "name");
-        return ResultJson.success("enc".equals(type) ? algorithm.encrypt(param, encryptContext): algorithm.decrypt(param, encryptContext));
+        return ResultJson.success("enc".equals(type) ? algorithm.encrypt(param, encryptContext) : algorithm.decrypt(param, encryptContext));
     }
 
     @RequestMapping(value = "/test/javassist")
