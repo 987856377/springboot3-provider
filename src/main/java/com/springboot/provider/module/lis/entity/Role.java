@@ -3,6 +3,7 @@ package com.springboot.provider.module.lis.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.springboot.provider.common.annotation.EncryptField;
 
 /**
  * <p>
@@ -21,6 +22,7 @@ public class Role extends Model<Role> {
 
     private String name;
 
+    @EncryptField
     private String title;
 
     public Role() {

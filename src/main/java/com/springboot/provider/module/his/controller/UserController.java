@@ -1,5 +1,6 @@
 package com.springboot.provider.module.his.controller;
 
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.provider.common.ResultCode;
 import com.springboot.provider.common.ResultJson;
@@ -41,7 +42,7 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @DSTransactional
     @RequestMapping("add")
     public ResultJson add() {
         User user = new User();
