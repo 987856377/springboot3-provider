@@ -25,9 +25,9 @@ import java.util.*;
  * @version 4.6.0
  */
 @Intercepts({@Signature(
-    type = ResultSetHandler.class,
-    method = "handleResultSets",
-    args = {Statement.class})
+        type = ResultSetHandler.class,
+        method = "handleResultSets",
+        args = {Statement.class})
 })
 public class MybatisDecryptInterceptor implements Interceptor {
     private final static Logger log = LoggerFactory.getLogger(MybatisDecryptInterceptor.class);
@@ -66,7 +66,7 @@ public class MybatisDecryptInterceptor implements Interceptor {
         }
         if (sourceObject instanceof List<?>) {
             List<?> sourceList = (List<?>) sourceObject;
-            if(CollUtil.isEmpty(sourceList)) {
+            if (CollUtil.isEmpty(sourceList)) {
                 return;
             }
             // 判断第一个元素是否含有注解。如果没有直接返回，提高效率

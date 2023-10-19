@@ -22,11 +22,11 @@ package com.springboot.provider.common.spi.application.exception;
  * Service provider not found exception.
  */
 public final class ServiceProviderNotFoundServerException extends RuntimeException {
-    
+
     public ServiceProviderNotFoundServerException(final Class<?> clazz) {
         super(String.format("No implementation class load from SPI `%s`.", clazz.getName()));
     }
-    
+
     public ServiceProviderNotFoundServerException(final Class<?> clazz, final String type) {
         super(String.format("No implementation class load from SPI `%s` with type `%s`.", clazz.getName(), type));
     }

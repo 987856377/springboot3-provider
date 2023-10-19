@@ -35,8 +35,8 @@ public final class OrderedSPIRegistry {
      * Get registered services by class type.
      *
      * @param spiClass class of ordered SPI
-     * @param types types
-     * @param <T> type of ordered SPI class
+     * @param types    types
+     * @param <T>      type of ordered SPI class
      * @return registered services
      */
     public static <T extends OrderedSPI<?>> Map<Class<?>, T> getRegisteredServicesByClass(final Class<T> spiClass, final Collection<Class<?>> types) {
@@ -47,27 +47,27 @@ public final class OrderedSPIRegistry {
         }
         return result;
     }
-    
+
     /**
      * Get registered services.
      *
      * @param spiClass class of ordered SPI
-     * @param types types
-     * @param <K> type of key
-     * @param <V> type of ordered SPI class
+     * @param types    types
+     * @param <K>      type of key
+     * @param <V>      type of ordered SPI class
      * @return registered services
      */
     public static <K, V extends OrderedSPI<?>> Map<K, V> getRegisteredServices(final Class<V> spiClass, final Collection<K> types) {
         return getRegisteredServices(spiClass, types, Comparator.naturalOrder());
     }
-    
+
     /**
      * Get registered services.
      *
-     * @param spiClass class of ordered SPI
-     * @param types types
-     * @param <K> type of key
-     * @param <V> type of ordered SPI class
+     * @param spiClass        class of ordered SPI
+     * @param types           types
+     * @param <K>             type of key
+     * @param <V>             type of ordered SPI class
      * @param orderComparator order comparator
      * @return registered services
      */
@@ -85,18 +85,18 @@ public final class OrderedSPIRegistry {
         OrderedServicesCache.cacheServices(spiClass, types, result);
         return result;
     }
-    
+
     /**
      * Get registered services.
      *
      * @param spiClass class of ordered SPI
-     * @param <T> type of ordered SPI class
+     * @param <T>      type of ordered SPI class
      * @return registered services
      */
     public static <T extends OrderedSPI<?>> Collection<T> getRegisteredServices(final Class<T> spiClass) {
         return getRegisteredServices(spiClass, Comparator.naturalOrder());
     }
-    
+
     private static <T extends OrderedSPI<?>> Collection<T> getRegisteredServices(final Class<T> spiClass, final Comparator<Integer> comparator) {
         Map<Integer, T> result = new TreeMap<>(comparator);
         for (T each : ApplicationServiceLoader.getServiceInstances(spiClass)) {

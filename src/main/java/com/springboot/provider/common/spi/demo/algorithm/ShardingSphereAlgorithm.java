@@ -26,7 +26,7 @@ import java.util.Properties;
  * ShardingSphere algorithm.
  */
 public interface ShardingSphereAlgorithm extends TypedSPI, SPIPostProcessor {
-    
+
     /**
      * Get properties.
      *

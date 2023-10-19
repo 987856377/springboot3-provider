@@ -2,7 +2,6 @@ package com.springboot.provider;
 
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import com.springboot.mjt.annotation.EnableMappingJdbcTemplate;
 import com.springboot.provider.common.selector.annotation.EnableBeans;
 import com.springboot.provider.config.SSL;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ import java.util.Arrays;
 // 自定义数据源一定要排除SpringBoot自动配置数据源，不然会出现循环引用的问题，The dependencies of some of the beans in the application context form a cycle
 @SpringBootApplication/*(exclude = {DataSourceAutoConfiguration.class})*/
 @EnableBeans(packages = "com.springboot.provider.module.his.entity")
-@EnableMappingJdbcTemplate(baseLocations = {"classpath:/xml/*.xml"})
 public class Application {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

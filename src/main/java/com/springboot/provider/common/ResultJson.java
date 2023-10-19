@@ -65,11 +65,12 @@ public class ResultJson<T> implements Serializable {
     }
 
     public static <T> ResultJson<T> failure(ResultCode resultCode) {
-        return failure(resultCode, null);
+        return new ResultJson<>(resultCode, null);
     }
 
-    public static <T> ResultJson<T> failure(ResultCode resultCode, T body) {
-        return new ResultJson<>(resultCode, body);
+
+    public static <T> ResultJson<T> failure(String message) {
+        return new ResultJson<T>(-1, message, null);
     }
 
     public void setResultCode(ResultCode resultCode) {

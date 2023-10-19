@@ -23,14 +23,14 @@ import java.util.Collection;
  * SPI metadata aware.
  */
 public interface SPIMetadataAware {
-    
+
     /**
      * Get supported database types.
      *
      * @return supported database types
      */
     Collection<String> getSupportedDatabaseTypes();
-    
+
     /**
      * Get description.
      *

@@ -21,7 +21,7 @@ package com.springboot.provider.common.spi.application.type.required;
  * Required SPI.
  */
 public interface RequiredSPI {
-    
+
     /**
      * Judge whether default service provider.
      *

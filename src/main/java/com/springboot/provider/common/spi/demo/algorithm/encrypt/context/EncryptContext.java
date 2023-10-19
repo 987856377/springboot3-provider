@@ -21,13 +21,13 @@ package com.springboot.provider.common.spi.demo.algorithm.encrypt.context;
  * Encrypt context.
  */
 public final class EncryptContext {
-    
+
     private final String databaseName;
-    
+
     private final String schemaName;
-    
+
     private final String tableName;
-    
+
     private final String columnName;
 
     public EncryptContext(String databaseName, String schemaName, String tableName, String columnName) {

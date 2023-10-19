@@ -32,23 +32,23 @@ public final class OrderedServicesCache {
     }
 
     private static volatile SoftReference<Map<Key, Map<?, ?>>> softCache = new SoftReference<>(new ConcurrentHashMap<>(128));
-    
+
     /**
      * Find cached services.
-     * 
+     *
      * @param spiClass SPI class
-     * @param types types
+     * @param types    types
      * @return cached services
      */
     public static Optional<Map<?, ?>> findCachedServices(final Class<?> spiClass, final Collection<?> types) {
         return Optional.ofNullable(softCache.get()).map(optional -> optional.get(new Key(spiClass, types)));
     }
-    
+
     /**
      * Cache services.
-     * 
+     *
      * @param spiClass SPI class
-     * @param types types
+     * @param types    types
      * @param services services to be cached
      */
     public static void cacheServices(final Class<?> spiClass, final Collection<?> types, final Map<?, ?> services) {
@@ -66,9 +66,9 @@ public final class OrderedServicesCache {
     }
 
     private static final class Key {
-        
+
         private final Class<?> clazz;
-        
+
         private final Collection<?> types;
 
         @Override

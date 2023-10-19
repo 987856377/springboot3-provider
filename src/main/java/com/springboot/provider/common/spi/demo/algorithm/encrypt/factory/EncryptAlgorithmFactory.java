@@ -17,17 +17,17 @@
 
 package com.springboot.provider.common.spi.demo.algorithm.encrypt.factory;
 
-import com.springboot.provider.common.spi.demo.algorithm.AlgorithmConfiguration;
-import com.springboot.provider.common.spi.demo.algorithm.encrypt.EncryptAlgorithm;
-import com.springboot.provider.common.spi.demo.algorithm.ShardingSphereAlgorithmFactory;
 import com.springboot.provider.common.spi.application.ApplicationServiceLoader;
 import com.springboot.provider.common.spi.application.type.typed.TypedSPIRegistry;
+import com.springboot.provider.common.spi.demo.algorithm.AlgorithmConfiguration;
+import com.springboot.provider.common.spi.demo.algorithm.ShardingSphereAlgorithmFactory;
+import com.springboot.provider.common.spi.demo.algorithm.encrypt.EncryptAlgorithm;
 
 /**
  * Encrypt algorithm factory.
  */
 public final class EncryptAlgorithmFactory {
-    
+
     static {
         ApplicationServiceLoader.register(EncryptAlgorithm.class);
     }
@@ -37,19 +37,19 @@ public final class EncryptAlgorithmFactory {
 
     /**
      * Create new instance of encrypt algorithm.
-     * 
+     *
      * @param encryptAlgorithmConfig encrypt algorithm configuration
-     * @param <I> type of to be encrypted data
-     * @param <O> type of to be decrypted data
+     * @param <I>                    type of to be encrypted data
+     * @param <O>                    type of to be decrypted data
      * @return created instance
      */
     public static <I, O> EncryptAlgorithm<I, O> newInstance(final AlgorithmConfiguration encryptAlgorithmConfig) {
         return ShardingSphereAlgorithmFactory.createAlgorithm(encryptAlgorithmConfig, EncryptAlgorithm.class);
     }
-    
+
     /**
      * Judge whether contains encrypt algorithm.
-     * 
+     *
      * @param encryptAlgorithmType encrypt algorithm type
      * @return contains encrypt algorithm or not
      */

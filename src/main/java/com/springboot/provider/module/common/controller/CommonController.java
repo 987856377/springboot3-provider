@@ -248,7 +248,7 @@ public class CommonController {
             boolean b = bloomFilter.mightContain(1);
             return ResultJson.success("consume: " + id + " success, Container might contain 1: " + b);
         }
-        return ResultJson.failure(ResultCode.SERVICE_UNAVAILABLE, "access too frequently");
+        return ResultJson.failure("access too frequently");
     }
 
     @RequestMapping(value = "/test/spi/factory/{param}")

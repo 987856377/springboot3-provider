@@ -21,7 +21,7 @@ import java.net.URL;
 public class WebServiceUtils {
     private static final Log LOGGER = LogFactory.getLog(WebServiceUtils.class);
 
-    private static String WEBSERVICE_INVOKE_URL = "http://10.80.5.34:9528/hai/WebServiceEntry?wsdl";
+    private static final String WEBSERVICE_INVOKE_URL = "http://10.80.5.34:9528/hai/WebServiceEntry?wsdl";
 
     public static String getPlatform(String service, String xml) {
         LOGGER.info(" >>> 调用 WebService 接口：service: " + service + "; 入参: " + xml);

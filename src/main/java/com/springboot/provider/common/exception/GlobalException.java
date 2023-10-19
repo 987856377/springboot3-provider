@@ -29,7 +29,7 @@ public class GlobalException {
     @ExceptionHandler(value = NullPointerException.class)
     public ResultJson exceptionHandler(NullPointerException e) {
         logger.error("发生空指针异常！原因是:", e);
-        return ResultJson.failure(ResultCode.INTERNAL_SERVER_ERROR, "发生空指针异常");
+        return ResultJson.failure("发生空指针异常");
     }
 
     /**
@@ -41,7 +41,7 @@ public class GlobalException {
     @ExceptionHandler(value = SQLException.class)
     public ResultJson sqlExceptionHandler(SQLException e) {
         logger.error("SQL 执行异常！原因是:", e);
-        return ResultJson.failure(ResultCode.INTERNAL_SERVER_ERROR, "SQL 执行异常");
+        return ResultJson.failure("SQL 执行异常");
     }
 
     /**
@@ -53,7 +53,7 @@ public class GlobalException {
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     public ResultJson uploadSizeExceptionHandler(MaxUploadSizeExceededException e) {
         logger.error("文件过大异常！原因是:", e);
-        return ResultJson.failure(ResultCode.REQUEST_ENTITY_TOO_LARGE, "文件过大,仅支持 " + maxFileSize + " 大小的文件");
+        return ResultJson.failure("文件过大,仅支持 " + maxFileSize + " 大小的文件");
     }
 
 

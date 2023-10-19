@@ -17,32 +17,32 @@
 
 package com.springboot.provider.common.spi.demo.algorithm.encrypt;
 
+import com.springboot.provider.common.spi.application.annotation.SingletonSPI;
 import com.springboot.provider.common.spi.demo.algorithm.ShardingSphereAlgorithm;
 import com.springboot.provider.common.spi.demo.algorithm.encrypt.context.EncryptContext;
-import com.springboot.provider.common.spi.application.annotation.SingletonSPI;
 
 /**
  * Encrypt algorithm.
- * 
+ *
  * @param <I> type of plain value
  * @param <O> type of cipher value
  */
 @SingletonSPI
 public interface EncryptAlgorithm<I, O> extends ShardingSphereAlgorithm {
-    
+
     /**
      * Encode.
      *
-     * @param plainValue plain value
+     * @param plainValue     plain value
      * @param encryptContext encrypt context
      * @return cipher value
      */
     O encrypt(I plainValue, EncryptContext encryptContext);
-    
+
     /**
      * Decode.
      *
-     * @param cipherValue cipher value
+     * @param cipherValue    cipher value
      * @param encryptContext encrypt context
      * @return plain value
      */

@@ -36,8 +36,8 @@ public final class TypedSPIRegistry {
      * Find registered service.
      *
      * @param spiClass typed SPI class
-     * @param type type
-     * @param <T> SPI class type
+     * @param type     type
+     * @param <T>      SPI class type
      * @return registered service
      */
     public static <T extends TypedSPI> Optional<T> findRegisteredService(final Class<T> spiClass, final String type) {
@@ -48,14 +48,14 @@ public final class TypedSPIRegistry {
         }
         return Optional.empty();
     }
-    
+
     /**
      * Find registered service.
      *
      * @param spiClass typed SPI class
-     * @param type type
-     * @param props properties
-     * @param <T> SPI class type
+     * @param type     type
+     * @param props    properties
+     * @param <T>      SPI class type
      * @return registered service
      */
     public static <T extends TypedSPI> Optional<T> findRegisteredService(final Class<T> spiClass, final String type, final Properties props) {
@@ -70,11 +70,11 @@ public final class TypedSPIRegistry {
         }
         return Optional.empty();
     }
-    
+
     private static boolean matchesType(final String type, final TypedSPI instance) {
         return instance.getType().equalsIgnoreCase(type) || instance.getTypeAliases().contains(type);
     }
-    
+
     private static Properties convertToStringTypedProperties(final Properties props) {
         if (null == props) {
             return new Properties();
@@ -83,13 +83,13 @@ public final class TypedSPIRegistry {
         props.forEach((key, value) -> result.setProperty(key.toString(), null == value ? null : value.toString()));
         return result;
     }
-    
+
     /**
      * Get registered service.
      *
      * @param spiClass typed SPI class
-     * @param type type
-     * @param <T> SPI class type
+     * @param type     type
+     * @param <T>      SPI class type
      * @return registered service
      */
     public static <T extends TypedSPI> T getRegisteredService(final Class<T> spiClass, final String type) {
@@ -99,14 +99,14 @@ public final class TypedSPIRegistry {
         }
         throw new ServiceProviderNotFoundServerException(spiClass, type);
     }
-    
+
     /**
      * Get registered service.
-     * 
+     *
      * @param spiClass typed SPI class
-     * @param type type
-     * @param props properties
-     * @param <T> SPI class type
+     * @param type     type
+     * @param props    properties
+     * @param <T>      SPI class type
      * @return registered service
      */
     public static <T extends TypedSPI> T getRegisteredService(final Class<T> spiClass, final String type, final Properties props) {

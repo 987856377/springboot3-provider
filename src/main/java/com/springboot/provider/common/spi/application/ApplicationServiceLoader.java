@@ -63,7 +63,8 @@ public final class ApplicationServiceLoader {
         if (null == serviceInterface.getAnnotation(SingletonSPI.class)) {
             try {
                 return createNewServiceInstances(serviceInterface);
-            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException e) {
                 e.printStackTrace();
             }
         } else {

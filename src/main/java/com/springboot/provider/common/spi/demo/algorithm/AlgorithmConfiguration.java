@@ -26,11 +26,11 @@ import java.util.Properties;
  * Algorithm configuration.
  */
 public final class AlgorithmConfiguration {
-    
+
     private final String type;
-    
+
     private final Properties props;
-    
+
     public AlgorithmConfiguration(final String type, final Properties props) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(type), "Type is required.");
         this.type = type;

@@ -34,7 +34,7 @@ public final class OptionalSPIRegistry {
      * Find registered service.
      *
      * @param spiClass optional SPI class
-     * @param <T> SPI class type
+     * @param <T>      SPI class type
      * @return registered service
      */
     public static <T extends OptionalSPI> Optional<T> findRegisteredService(final Class<T> spiClass) {

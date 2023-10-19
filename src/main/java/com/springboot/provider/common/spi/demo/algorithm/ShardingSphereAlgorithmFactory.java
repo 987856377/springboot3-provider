@@ -23,13 +23,13 @@ import com.springboot.provider.common.spi.application.type.typed.TypedSPIRegistr
  * ShardingSphere algorithm factory.
  */
 public final class ShardingSphereAlgorithmFactory {
-    
+
     /**
      * Create algorithm.
-     * 
+     *
      * @param algorithmConfig algorithm configuration
-     * @param algorithmClass algorithm class
-     * @param <T> type of algorithm
+     * @param algorithmClass  algorithm class
+     * @param <T>             type of algorithm
      * @return algorithm
      */
     @SuppressWarnings("unchecked")

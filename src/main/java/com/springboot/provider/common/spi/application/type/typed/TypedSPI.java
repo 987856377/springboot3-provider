@@ -24,16 +24,16 @@ import java.util.Collections;
  * Typed SPI.
  */
 public interface TypedSPI {
-    
+
     /**
      * Get type.
-     * 
+     *
      * @return type
      */
     default String getType() {
         return "";
     }
-    
+
     /**
      * Get type aliases.
      *

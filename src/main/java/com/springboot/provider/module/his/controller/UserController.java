@@ -10,7 +10,6 @@ import com.springboot.provider.module.lis.entity.Role;
 import com.springboot.provider.module.lis.service.RoleService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,7 +79,7 @@ public class UserController {
     @RequestMapping("getById")
     public ResultJson getById(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors() && bindingResult.getFieldError() != null) {
-            return ResultJson.failure(ResultCode.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
+            return ResultJson.failure(bindingResult.getFieldError().getDefaultMessage());
         }
 //        return ResultJson.success(userService.getById(user.getId()));
         return ResultJson.success(userService.getByUserId(user.getId()));
@@ -107,14 +106,14 @@ public class UserController {
     @RequestMapping("updateById")
     public ResultJson updateById(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors() && bindingResult.getFieldError() != null) {
-            return ResultJson.failure(ResultCode.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
+            return ResultJson.failure(bindingResult.getFieldError().getDefaultMessage());
         }
         User byId = userService.getById(user.getId());
         if (byId != null) {
             byId.setStatus(user.getStatus());
             return ResultJson.success(userService.updateById(byId));
         } else {
-            return ResultJson.failure(ResultCode.GONE, "user id: " + user.getId() + " not exist");
+            return ResultJson.failure("user id: " + user.getId() + " not exist");
         }
     }
 

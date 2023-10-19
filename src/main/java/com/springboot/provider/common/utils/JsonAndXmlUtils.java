@@ -121,6 +121,25 @@ public class JsonAndXmlUtils {
     }
 
     /**
+     * json字符串转对象数组
+     *
+     * @param json json字符串
+     * @param <T>  泛型
+     * @return java 对象
+     */
+    public static <T> List<T> jsonToList(String json, Class<T> clazz) {
+        if (StringUtils.isNotBlank(json)) {
+            try {
+
+                JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(ArrayList.class, clazz);
+                return OBJECT_MAPPER.readValue(json, javaType);
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    /**
      * xml字符串转对象
      *
      * @param xml   xml字符串

@@ -36,7 +36,7 @@ public final class RequiredSPIRegistry {
      * Get registered service.
      *
      * @param spiClass required SPI class
-     * @param <T> SPI class type
+     * @param <T>      SPI class type
      * @return registered service
      */
     public static <T extends RequiredSPI> T getRegisteredService(final Class<T> spiClass) {
@@ -46,7 +46,7 @@ public final class RequiredSPIRegistry {
         }
         return result;
     }
-    
+
     private static <T extends RequiredSPI> T getRequiredService(final Class<T> spiClass) {
         Collection<T> services = ApplicationServiceLoader.getServiceInstances(spiClass);
         if (services.isEmpty()) {
