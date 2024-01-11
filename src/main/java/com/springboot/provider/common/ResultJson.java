@@ -70,7 +70,7 @@ public class ResultJson<T> implements Serializable {
 
 
     public static <T> ResultJson<T> failure(String message) {
-        return new ResultJson<T>(-1, message, null);
+        return new ResultJson<T>(500, message, null);
     }
 
     public void setResultCode(ResultCode resultCode) {
