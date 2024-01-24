@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 public class BaseEntity<T extends Model<?>> extends Model<T> {
 
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @TableField(value = "create_user", fill = FieldFill.INSERT)
@@ -23,10 +23,10 @@ public class BaseEntity<T extends Model<?>> extends Model<T> {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_user", fill = FieldFill.INSERT)
+    @TableField(value = "update_user", fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
 
-    @TableField(value = "update_time", fill = FieldFill.UPDATE)
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableField(value = "status")

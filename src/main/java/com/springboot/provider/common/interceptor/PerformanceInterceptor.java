@@ -1,9 +1,11 @@
 package com.springboot.provider.common.interceptor;
 
+import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.db.sql.SqlFormatter;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.SystemClock;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.plugin.*;
@@ -11,6 +13,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
@@ -46,6 +49,8 @@ public class PerformanceInterceptor implements Interceptor {
      */
     private boolean writeInLog = false;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     private final DataSource dataSource;
 
     public PerformanceInterceptor(DataSource dataSource) {
@@ -68,10 +73,26 @@ public class PerformanceInterceptor implements Interceptor {
         }
 
         // 格式化 SQL 打印执行结果
-        StringBuilder formatSql = new StringBuilder();
-        formatSql.append(" >>> Datasource：").append(dataSource.toString());
-        formatSql.append(" - ID：").append(mpStatementHandler.mappedStatement().getId());
-        formatSql.append("\n Execute SQL：").append(sqlFormat(originalSql, format));
+        Map<String, Object> printMap = new HashMap<>();
+        if (parameterObject instanceof Map) {
+            HashMap<String, Object> paramsMap = (HashMap) parameterObject;
+            if (!ObjectUtils.isEmpty(paramsMap)) {
+                paramsMap.keySet().forEach(key -> {
+                    if (!key.startsWith("param")) {
+                        printMap.put(key, paramsMap.get(key));
+                    }
+                });
+            }
+        }
+
+        String invokeId = NanoId.randomNanoId();
+
+        // 格式化 SQL 打印执行结果
+        String formatSql = " >>> Datasource：" + dataSource.toString() +
+                "\n - invokeId：" + invokeId +
+                "\n - ID：" + mpStatementHandler.mappedStatement().getId() +
+                "\n - SQL：" + sqlFormat(originalSql, true) +
+                "\n - Parameter：" + objectMapper.writeValueAsString(printMap.isEmpty() ? parameterObject : printMap);
 
         // 计算执行 SQL 耗时
         long start = SystemClock.now();
@@ -79,10 +100,11 @@ public class PerformanceInterceptor implements Interceptor {
         long timing = SystemClock.now() - start;
 
         // 打印SQL执行时间
-        StringBuilder invokeCost = new StringBuilder();
-        invokeCost.append(" >>> Datasource：").append(dataSource.toString());
-        invokeCost.append(" - ID：").append(mpStatementHandler.mappedStatement().getId());
-        invokeCost.append(" - Cost：").append(timing).append(" ms");
+        String invokeCost = " >>> Datasource：" + dataSource.toString() +
+                "\n - invokeId：" + invokeId +
+                "\n - ID：" + mpStatementHandler.mappedStatement().getId() +
+                "\n - Cost：" + timing + " ms";
+
         if (this.isWriteInLog()) {
             if (this.getMaxTime() >= 1 && timing > this.getMaxTime()) {
                 logger.error(formatSql.toString());

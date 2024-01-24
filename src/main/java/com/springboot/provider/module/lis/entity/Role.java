@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.springboot.provider.common.annotation.EncryptField;
 
+import java.io.Serial;
+
 /**
  * <p>
  *
@@ -15,9 +17,7 @@ import com.springboot.provider.common.annotation.EncryptField;
  */
 public class Role extends Model<Role> {
 
-    private static final long serialVersionUID = 1L;
-
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     private String name;
