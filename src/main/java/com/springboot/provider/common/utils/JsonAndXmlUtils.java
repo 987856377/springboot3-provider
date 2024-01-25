@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class JsonAndXmlUtils {
     private static final XmlMapper XML_MAPPER = new XmlMapper();
 
     static {
+        OBJECT_MAPPER.registerModule(new JavaTimeModule());
         // 对于空的对象转json的时候不抛出错误
         OBJECT_MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         // 允许属性名称没有引号
@@ -42,6 +44,7 @@ public class JsonAndXmlUtils {
         // 设置输出时包含属性的风格
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.ALWAYS);
 
+        XML_MAPPER.registerModule(new JavaTimeModule());
         // 对于空的对象转json的时候不抛出错误
         XML_MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         // 允许属性名称没有引号

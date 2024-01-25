@@ -1,6 +1,5 @@
 package com.springboot.provider.module.his.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.provider.module.his.entity.User;
 import com.springboot.provider.module.his.mapper.UserMapper;
@@ -19,7 +18,6 @@ import java.util.List;
  * @author XuZhenkui
  * @since 2020-12-10
  */
-@DS("master")
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {

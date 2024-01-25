@@ -4,8 +4,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.core.map.MapUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.provider.common.filter.RepeatedlyRequestWrapper;
+import com.springboot.provider.common.utils.JsonAndXmlUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.time.StopWatch;
@@ -29,8 +29,6 @@ import java.util.Map;
 public class HttpRequestHandlerInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final TransmittableThreadLocal<StopWatch> invokeTimeTL = new TransmittableThreadLocal<>();
     private final TransmittableThreadLocal<String> invokeIdTL = new TransmittableThreadLocal<>();
 
@@ -51,7 +49,7 @@ public class HttpRequestHandlerInterceptor implements HandlerInterceptor {
         } else {
             Map<String, String[]> parameterMap = request.getParameterMap();
             if (MapUtil.isNotEmpty(parameterMap)) {
-                String parameters = objectMapper.writeValueAsString(parameterMap);
+                String parameters = JsonAndXmlUtils.objectToJson(parameterMap);
                 logger.info("InvokeId: {}, Request URL: {}, Param Parameter: {}", invokeId, url, parameters);
             } else {
                 logger.info("InvokeId: {}, Request URL: {}, No Parameter", invokeId, url);

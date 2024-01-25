@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.springboot.provider.common.jackson.BigNumberSerializer;
@@ -33,10 +34,11 @@ import java.util.TimeZone;
 @Configuration
 public class JacksonConfig {
 
-    @Primary
     @Bean
+    @Primary
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder, JacksonProperties jacksonProperties) {
         ObjectMapper objectMapper = jackson2ObjectMapperBuilder.createXmlMapper(false).build();
+        objectMapper.registerModule(new JavaTimeModule());
 
         // 全局配置序列化返回 JSON 处理
         SimpleModule simpleModule = new SimpleModule();

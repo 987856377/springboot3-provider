@@ -1,6 +1,5 @@
 package com.springboot.provider.module.lis.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.provider.module.lis.entity.Role;
 import com.springboot.provider.module.lis.mapper.RoleMapper;
@@ -18,7 +17,6 @@ import java.util.List;
  * @author XuZhenkui
  * @since 2020-12-10
  */
-@DS("slave")
 @Service
 @Transactional
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {

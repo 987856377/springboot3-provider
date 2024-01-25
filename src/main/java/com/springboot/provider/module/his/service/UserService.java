@@ -1,5 +1,6 @@
 package com.springboot.provider.module.his.service;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.provider.module.his.entity.User;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @author XuZhenkui
  * @since 2020-12-10
  */
+@DS("master")
 public interface UserService extends IService<User> {
     List<User> getAllUser();
 

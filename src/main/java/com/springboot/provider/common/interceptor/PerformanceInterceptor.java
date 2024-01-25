@@ -5,7 +5,7 @@ import cn.hutool.db.sql.SqlFormatter;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.SystemClock;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.provider.common.utils.JsonAndXmlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.plugin.*;
@@ -49,8 +49,6 @@ public class PerformanceInterceptor implements Interceptor {
      */
     private boolean writeInLog = false;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final DataSource dataSource;
 
     public PerformanceInterceptor(DataSource dataSource) {
@@ -92,7 +90,7 @@ public class PerformanceInterceptor implements Interceptor {
                 "\n - invokeId：" + invokeId +
                 "\n - ID：" + mpStatementHandler.mappedStatement().getId() +
                 "\n - SQL：" + sqlFormat(originalSql, true) +
-                "\n - Parameter：" + objectMapper.writeValueAsString(printMap.isEmpty() ? parameterObject : printMap);
+                "\n - Parameter：" + JsonAndXmlUtils.objectToJson(printMap.isEmpty() ? parameterObject : printMap);
 
         // 计算执行 SQL 耗时
         long start = SystemClock.now();
