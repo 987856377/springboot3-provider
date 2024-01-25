@@ -44,9 +44,11 @@ public class WebSecurityConfig {
                 })
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(httpMethod -> {
+                    httpMethod.requestMatchers(HttpMethod.OPTIONS, "/**");
+                })
                 .authorizeHttpRequests(requests -> {
-                    requests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                            .requestMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
+                    requests.requestMatchers("/", "/websocket/**", "/api/**", "/test/**", "/his/**", "/lis/**").permitAll()
                             .requestMatchers("/user/**").hasRole("USER")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .requestMatchers("/file/**").hasAnyRole("USER", "ADMIN")
