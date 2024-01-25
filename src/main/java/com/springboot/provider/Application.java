@@ -2,6 +2,8 @@ package com.springboot.provider;
 
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import com.springboot.provider.common.lifecycle.ApplicationContextInitializerHandler;
+import com.springboot.provider.common.lifecycle.BootstrapRegistryInitializerHandler;
 import com.springboot.provider.common.selector.annotation.EnableBeans;
 import com.springboot.provider.config.SSL;
 import org.slf4j.Logger;
@@ -42,7 +44,12 @@ public class Application {
 //    我们从这些spring&springboot的扩展点当中，大致可以窥视到整个bean的生命周期。在业务开发或者写中间件业务的时候，可以合理利用spring提供给我们的扩展点，在spring启动的各个阶段内做一些事情。以达到自定义初始化的目的。
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication application = new SpringApplication(Application.class);
+        application.addBootstrapRegistryInitializer(new BootstrapRegistryInitializerHandler());
+        application.addInitializers(new ApplicationContextInitializerHandler());
+        application.run(args);
+
+//        SpringApplication.run(Application.class, args);
     }
 
     //    打印注册到spring boot中的bean
