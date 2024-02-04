@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 import com.springboot.provider.common.spi.demo.algorithm.encrypt.EncryptAlgorithm;
 import com.springboot.provider.common.spi.demo.algorithm.encrypt.context.EncryptContext;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.pqc.legacy.math.linearalgebra.ByteUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

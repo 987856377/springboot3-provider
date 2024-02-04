@@ -18,11 +18,18 @@ public class PayStrategyFactory {
 
     public static void register(PayStrategy type, PayService payService) {
         if (type != null) {
-            PAY_MAP.putIfAbsent(type, payService);
+            if (PAY_MAP.containsKey(type)) {
+                throw new RuntimeException("PayStrategy [" + type + "] already registered!!!");
+            } else {
+                PAY_MAP.put(type, payService);
+            }
         }
     }
 
     public static PayService get(PayStrategy type) {
+        if (!PAY_MAP.containsKey(type)) {
+            throw new RuntimeException("PayStrategy [" + type + "] not registered!!!");
+        }
         return PAY_MAP.get(type);
     }
 }

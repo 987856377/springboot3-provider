@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
  * @Author xuzhenkui
  * @Date 2021/7/2 15:45
  */
-public abstract class AbstractPayService {
+public abstract class AbstractPayService implements PayService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //    1. 使用构造函数注册
     public AbstractPayService() {
-        PayStrategyFactory.register(getStrategy(), getService());
+        PayStrategyFactory.register(getStrategy(), this);
     }
 
 //    2. 使用 @PostConstruct 注册
@@ -27,9 +27,6 @@ public abstract class AbstractPayService {
 //    }
 
     public abstract PayStrategy getStrategy();
-
-    public abstract PayService getService();
-
 
     public Boolean valid() {
         logger.info("AbstractPayService validate pay environment success!");

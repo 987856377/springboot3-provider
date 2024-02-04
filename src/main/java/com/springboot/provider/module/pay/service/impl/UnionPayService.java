@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @create: 2021-01-08 09:28
  **/
 @Service
-public class UnionPayService extends AbstractPayService implements PayService {
+public class UnionPayService extends AbstractPayService {
 
     private final Logger logger = LoggerFactory.getLogger(UnionPayService.class);
 
@@ -34,11 +34,6 @@ public class UnionPayService extends AbstractPayService implements PayService {
     @Override
     public PayStrategy getStrategy() {
         return PayStrategy.UNION;
-    }
-
-    @Override
-    public PayService getService() {
-        return this;
     }
 
     @Override

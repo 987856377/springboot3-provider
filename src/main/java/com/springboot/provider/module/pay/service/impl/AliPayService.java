@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @create: 2021-01-08 09:27
  **/
 @Service
-public class AliPayService extends AbstractPayService implements PayService {
+public class AliPayService extends AbstractPayService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,11 +38,6 @@ public class AliPayService extends AbstractPayService implements PayService {
     }
 
     @Override
-    public PayService getService() {
-        return this;
-    }
-
-    @Override
     public Boolean pay() {
         if (valid()) {
             logger.info("PayEnum.ALI = " + PayStrategy.ALI);
@@ -53,7 +48,10 @@ public class AliPayService extends AbstractPayService implements PayService {
 
     @Override
     public Boolean valid() {
-        logger.info("AliPayService validate pay environment success!");
-        return true;
+        if (super.valid()) {
+            logger.info("AliPayService validate pay environment success!");
+            return true;
+        }
+        return false;
     }
 }
