@@ -45,7 +45,7 @@ public class MyBatisFastAutoGenerator {
 
     public static void main(String[] args) {
 
-        FastAutoGenerator fastAutoGenerator = FastAutoGenerator.create("jdbc:mysql://localhost:3306/test?useAffectedRows=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false",
+        FastAutoGenerator fastAutoGenerator = FastAutoGenerator.create("jdbc:mysql://localhost:3306/test?useAffectedRows=false&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false",
                 "root", "root");
 
         String moduleName = fastAutoGenerator.scannerNext("请输入模块名: ");
