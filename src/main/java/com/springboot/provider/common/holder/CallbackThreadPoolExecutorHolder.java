@@ -31,7 +31,7 @@ public class CallbackThreadPoolExecutorHolder {
 
     private final static ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setNameFormat(CallbackThreadPoolExecutorHolder.class.getName() + "-pool-%d").build();
 
-    private static ListeningExecutorService threadPoolExecutor = MoreExecutors.listeningDecorator(
+    private static final ListeningExecutorService threadPoolExecutor = MoreExecutors.listeningDecorator(
             new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
                     KEEP_ALIVE_TIME, TIME_UNIT,
                     WORK_QUEUE, THREAD_FACTORY, new ThreadPoolExecutor.CallerRunsPolicy()));

@@ -34,7 +34,7 @@ public class ThreadPoolExecutorHolder {
 
     private final static ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setNameFormat(ThreadPoolExecutorHolder.class.getName() + "-pool-%d").build();
 
-    private static ExecutorService threadPoolExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
+    private static final ExecutorService threadPoolExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
             KEEP_ALIVE_TIME, TIME_UNIT,
             WORK_QUEUE, THREAD_FACTORY, new ThreadPoolExecutor.CallerRunsPolicy());
 
