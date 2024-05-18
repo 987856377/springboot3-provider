@@ -85,6 +85,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
      * Override this method to configure content negotiation.
      *
      * @param configurer
+     *
      * @see DefaultServletHandlerConfigurer
      */
     @Override
@@ -94,6 +95,13 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 删除 MappingJackson2XmlHttpMessageConverter, 不返回 xml 格式的数据
+        converters.removeIf(item -> item instanceof MappingJackson2XmlHttpMessageConverter);
+
+        // 删除后重新添加 MappingJackson2XmlHttpMessageConverter 保证接口优先返回 json 格式
+//        MappingJackson2XmlHttpMessageConverter xmlConverter = new MappingJackson2XmlHttpMessageConverter();
+//        converters.add(xmlConverter);
+
         converters.forEach(converter -> {
             if (converter instanceof StringHttpMessageConverter) {
                 ((StringHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
