@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.springboot.provider</groupId>
@@ -177,12 +177,7 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.xfire</groupId>
-            <artifactId>xfire-core</artifactId>
-            <version>1.2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.xfire</groupId>
-            <artifactId>xfire-aegis</artifactId>
+            <artifactId>xfire-all</artifactId>
             <version>1.2.6</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->

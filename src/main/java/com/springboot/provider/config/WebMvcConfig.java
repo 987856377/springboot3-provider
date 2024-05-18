@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Configuration
@@ -93,10 +95,13 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.forEach(converter -> {
-            if (converter instanceof MappingJackson2HttpMessageConverter) {
+            if (converter instanceof StringHttpMessageConverter) {
+                ((StringHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
+            } else if (converter instanceof MappingJackson2HttpMessageConverter) {
+                ((MappingJackson2HttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
                 ((MappingJackson2HttpMessageConverter) converter).setObjectMapper(objectMapper);
-            }
-            if (converter instanceof MappingJackson2XmlHttpMessageConverter) {
+            } else if (converter instanceof MappingJackson2XmlHttpMessageConverter) {
+                ((MappingJackson2XmlHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
                 ((MappingJackson2XmlHttpMessageConverter) converter).setObjectMapper(xmlMapper);
             }
         });
