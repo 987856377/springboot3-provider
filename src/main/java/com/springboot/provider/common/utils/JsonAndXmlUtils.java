@@ -1,11 +1,15 @@
 package com.springboot.provider.common.utils;
 
+import cn.hutool.core.lang.id.NanoId;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.util.CollectionUtils;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +36,6 @@ public class JsonAndXmlUtils {
     private static final XmlMapper XML_MAPPER = new XmlMapper();
 
     static {
-        OBJECT_MAPPER.registerModule(new JavaTimeModule());
         // 对于空的对象转json的时候不抛出错误
         OBJECT_MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         // 允许属性名称没有引号
@@ -44,7 +47,6 @@ public class JsonAndXmlUtils {
         // 设置输出时包含属性的风格
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.ALWAYS);
 
-        XML_MAPPER.registerModule(new JavaTimeModule());
         // 对于空的对象转json的时候不抛出错误
         XML_MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         // 允许属性名称没有引号
@@ -62,6 +64,51 @@ public class JsonAndXmlUtils {
     }
 
 
+    /**
+     * json 转 xml, root为xml根节点
+     *
+     * @param json
+     * @param root
+     *
+     * @return xml 字符串
+     */
+    public static String jsonToXml(String json, String root) {
+        if (StringUtils.isNotBlank(json)) {
+            try {
+                final Map map = OBJECT_MAPPER.readValue(json, Map.class);
+                final String xml = XML_MAPPER.writeValueAsString(map);
+                return xml.replaceFirst("<LinkedHashMap>", "<" + root + ">").replaceFirst("</LinkedHashMap>", "</" + root + ">");
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    /**
+     * xml 转 json
+     *
+     * @param xml
+     *
+     * @return json 字符串
+     */
+    public static String xmlToJson(String xml) {
+        if (StringUtils.isNotBlank(xml)) {
+            try {
+                final Map map = XML_MAPPER.readValue(xml, Map.class);
+                return OBJECT_MAPPER.writeValueAsString(map);
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    /**
+     * json 转 Map
+     *
+     * @param json
+     *
+     * @return Map 对象
+     */
     public static Map jsonToMap(String json) {
         if (StringUtils.isNotBlank(json)) {
             try {
@@ -76,6 +123,7 @@ public class JsonAndXmlUtils {
      * 对象转字符串
      *
      * @param object
+     *
      * @return json 字符串
      */
     public static String objectToJson(Object object) {
@@ -92,6 +140,7 @@ public class JsonAndXmlUtils {
      * 对象转xml格式字符串
      *
      * @param data
+     *
      * @return xml 字符串
      */
     public static String objectToXml(Object data) {
@@ -111,6 +160,7 @@ public class JsonAndXmlUtils {
      * @param json  json字符串
      * @param clazz 类
      * @param <T>   泛型
+     *
      * @return java 对象
      */
     public static <T> T jsonToObject(String json, Class<T> clazz) {
@@ -128,6 +178,7 @@ public class JsonAndXmlUtils {
      *
      * @param json json字符串
      * @param <T>  泛型
+     *
      * @return java 对象
      */
     public static <T> List<T> jsonToList(String json, Class<T> clazz) {
@@ -148,6 +199,7 @@ public class JsonAndXmlUtils {
      * @param xml   xml字符串
      * @param clazz 类
      * @param <T>   泛型
+     *
      * @return java 对象
      */
     public static <T> T xmlToObject(String xml, Class<T> clazz) {
@@ -161,57 +213,18 @@ public class JsonAndXmlUtils {
     }
 
     /**
-     * 指定根节点, map转xml字符串
-     *
-     * @param map
-     * @param root 根节点
-     * @return xml字符串
-     */
-    public static String mapToXml(Map<String, Object> map, String root) {
-        if (CollectionUtils.isEmpty(map) || StringUtils.isBlank(root)) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("<").append(root).append(">");
-        sb.append(mapToXml(map));
-        sb.append("</").append(root).append(">");
-        return sb.toString();
-    }
-
-    /**
-     * map转xml字符串
-     *
-     * @param map
-     * @return xml字符串
-     */
-    public static String mapToXml(Map<String, Object> map) {
-        if (CollectionUtils.isEmpty(map)) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof Map) {
-                sb.append(mapToXml((Map<String, Object>) value));
-            } else if (value != null && !("").equals(value)) {
-                sb.append("<").append(key).append(">").append(value).append("</").append(key).append(">");
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
      * 获取xml字符串中元素标签值
      * <p>xml中元素标签唯一</p>
      *
      * @param xml     响应报文(xml字符串格式)
      * @param element 元素名
+     *
      * @return xml字符串中元素标签值
+     *
      * @throws Exception
      */
     public static String getXmlSingleElementValue(String xml, String element) {
-        if (StringUtils.isBlank(xml) || StringUtils.isBlank(element)) {
+        if (StringUtils.isNotBlank(xml) || StringUtils.isNotBlank(element)) {
             return null;
         }
         //元素名<ELEMENT key = value ...>(.*)<ELEMENT/>
@@ -235,11 +248,13 @@ public class JsonAndXmlUtils {
      *
      * @param xml     响应报文(xml字符串格式)
      * @param element 元素名
+     *
      * @return xml字符串中元素标签列表
+     *
      * @throws Exception
      */
     public static List<String> getXmlListElementValue(String xml, String element) {
-        if (StringUtils.isBlank(xml) || StringUtils.isBlank(element)) {
+        if (StringUtils.isNotBlank(xml) || StringUtils.isNotBlank(element)) {
             return null;
         }
         List<String> list = new ArrayList<String>();
@@ -259,10 +274,11 @@ public class JsonAndXmlUtils {
      * 将xml字符串中的节点转为大写字母
      *
      * @param xml
+     *
      * @return
      */
     public static String xmlNodeToUpperCase(String xml) {
-        if (StringUtils.isBlank(xml)) {
+        if (StringUtils.isNotBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -279,10 +295,11 @@ public class JsonAndXmlUtils {
      * 将xml字符串中的节点转为小写字母
      *
      * @param xml
+     *
      * @return
      */
     public static String xmlNodeToLowerCase(String xml) {
-        if (StringUtils.isBlank(xml)) {
+        if (StringUtils.isNotBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -299,10 +316,11 @@ public class JsonAndXmlUtils {
      * 将xml字符串中的节点首字母转为大写字母
      *
      * @param xml
+     *
      * @return
      */
     public static String xmlNodeFirstLetterToUpperCase(String xml) {
-        if (StringUtils.isBlank(xml)) {
+        if (StringUtils.isNotBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -321,7 +339,7 @@ public class JsonAndXmlUtils {
     }
 
     public static String xmlNodeFirstLetterToUpper(String xml) {
-        if (StringUtils.isBlank(xml)) {
+        if (StringUtils.isNotBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -343,10 +361,11 @@ public class JsonAndXmlUtils {
      * 将xml字符串中的节点首字母转为小写字母
      *
      * @param xml
+     *
      * @return
      */
     public static String xmlNodeFirstLetterToLowerCase(String xml) {
-        if (StringUtils.isBlank(xml)) {
+        if (StringUtils.isNotBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -368,6 +387,7 @@ public class JsonAndXmlUtils {
      * 大小写字母相互转换
      *
      * @param c
+     *
      * @return
      */
     public static char characterConvertor(char c) {
@@ -384,6 +404,7 @@ public class JsonAndXmlUtils {
      * 大写字母转为小写字母
      *
      * @param c 大写字母
+     *
      * @return 小写字母
      */
     public static char upperToLowerConvertor(char c) {
@@ -398,6 +419,7 @@ public class JsonAndXmlUtils {
      * 小写字母转为大写字母
      *
      * @param c 小写字母
+     *
      * @return 大写字母
      */
     public static char lowerToUpperConvertor(char c) {
@@ -406,6 +428,99 @@ public class JsonAndXmlUtils {
         } else {
             return c;
         }
+    }
+
+    public static void main(String[] args) {
+        final MsgHeader msgHeader = new MsgHeader("HOL", "ODS_24556", "1");
+        final MsgBody msgBody = new MsgBody("782161", "夏秋月", "1", "410935199702151986", "19180899555", new User(2323L, "XQY", "123456"));
+        final BsXml bsXml = new BsXml(msgHeader, msgBody, "职工医保");
+
+        // Object 转 xml字符串
+        final String xml = JsonAndXmlUtils.objectToXml(bsXml);
+        System.out.println(xml);
+
+        // xml字符串 转 Object
+        final BsXml xmlToObject = JsonAndXmlUtils.xmlToObject(xml, BsXml.class);
+        System.out.println(xmlToObject);
+
+        // xml 转 json
+        final String json = JsonAndXmlUtils.xmlToJson(xml);
+        System.out.println(json);
+
+        // json 转 xml
+        final String XML = JsonAndXmlUtils.jsonToXml(json, "BsXml");
+        System.out.println(XML);
+
+        final BsXml xmlObj = JsonAndXmlUtils.xmlToObject(XML, BsXml.class);
+        System.out.println(xmlObj);
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BsXml {
+        private MsgHeader msgHeader;
+        private MsgBody msgBody;
+        private String extra;
+
+        @Override
+        public String toString() {
+            return JsonAndXmlUtils.objectToJson(this);
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MsgHeader {
+        private String sender;
+        private String msgType;
+        private String msgVersion;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MsgBody {
+        private String patientId;
+        private String patientName;
+        private String identityCardType;
+        private String identityCardNumber;
+        private String mobile;
+
+        @JacksonXmlProperty(localName = "PatientInfo")
+        private User user;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class User implements Cloneable {
+        private Long id;
+        private String username;
+        private String password;
+
+        @JacksonXmlElementWrapper(localName = "Roles")
+        @JacksonXmlProperty(localName = "Role")
+        private List<Role> roles;
+
+        public User(final Long id, final String username, final String password) {
+            this.id = id;
+            this.username = username;
+            this.password = password;
+            roles = new ArrayList<>();
+            roles.add(new Role(NanoId.randomNanoId(), "USER"));
+            roles.add(new Role(NanoId.randomNanoId(), "ADMIN"));
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Role {
+        private String code;
+        private String name;
     }
 
 }
