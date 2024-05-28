@@ -433,7 +433,7 @@ public class JsonAndXmlUtils {
     public static void main(String[] args) {
         final MsgHeader msgHeader = new MsgHeader("HOL", "ODS_24556", "1");
         final MsgBody msgBody = new MsgBody("782161", "夏秋月", "1", "410935199702151986", "19180899555", new User(2323L, "XQY", "123456"));
-        final BsXml bsXml = new BsXml(msgHeader, msgBody, "职工医保");
+        final BsXml<MsgBody> bsXml = new BsXml<>(msgHeader, msgBody, "职工医保");
 
         // Object 转 xml字符串
         final String xml = JsonAndXmlUtils.objectToXml(bsXml);
@@ -459,9 +459,9 @@ public class JsonAndXmlUtils {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class BsXml {
+    public static class BsXml<T> {
         private MsgHeader msgHeader;
-        private MsgBody msgBody;
+        private T msgBody;
         private String extra;
 
         @Override
