@@ -8,21 +8,15 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-/*
-匹配两个字符串A与B中间的字符串包含A与B：  表达式: A.*?B（“.“表示任意字符，“？”表示匹配0个或多个）  示例: Abaidu.comB  结果: Awww.apizl.comB
-匹配两个字符串A与B中间的字符串包含A但是不包含B：  表达式: A.*?(?=B)  示例: Awww.apizl.comB  结果: Awww.apizl.com
-匹配两个字符串A与B中间的字符串且不包含A与B：  表达式: (?<=A).*?(?=B) 如果不包含前面匹配的字符写法（?<=要匹配的开始字符）,不包含后面要匹配的字符写法（？=要匹配的结束字符）  示例: Awww.baidu.comB  结果: www.baidu.com
-*/
-
 
 /**
  * @program: test
@@ -32,8 +26,8 @@ import java.util.regex.Pattern;
  * @create: 2020-12-16 15:41
  **/
 public class JsonAndXmlUtils {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final XmlMapper XML_MAPPER = new XmlMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final XmlMapper XML_MAPPER = new XmlMapper();
 
     static {
         // 对于空的对象转json的时候不抛出错误
@@ -55,7 +49,7 @@ public class JsonAndXmlUtils {
         XML_MAPPER.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         // 设置输入时忽略在json字符串中存在但在java对象实际没有的属性
         XML_MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        // xml输出节点首字母大写
+//        // xml输出节点首字母大写
         XML_MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
         // 是否以强制与 Bean 名称自省严格兼容的功能
         XML_MAPPER.configure(MapperFeature.USE_STD_BEAN_NAMING, true);
@@ -224,10 +218,10 @@ public class JsonAndXmlUtils {
      * @throws Exception
      */
     public static String getXmlSingleElementValue(String xml, String element) {
-        if (StringUtils.isNotBlank(xml) || StringUtils.isNotBlank(element)) {
+        if (StringUtils.isBlank(xml) || StringUtils.isBlank(element)) {
             return null;
         }
-        //元素名<ELEMENT key = value ...>(.*)<ELEMENT/>
+        // 元素名<ELEMENT key = value ...>(.*)<ELEMENT/>
         StringBuffer regex = new StringBuffer();
         regex.append("<").append(element + ".*").append(">");
         regex.append("(.*)");
@@ -254,11 +248,11 @@ public class JsonAndXmlUtils {
      * @throws Exception
      */
     public static List<String> getXmlListElementValue(String xml, String element) {
-        if (StringUtils.isNotBlank(xml) || StringUtils.isNotBlank(element)) {
+        if (StringUtils.isBlank(xml) || StringUtils.isBlank(element)) {
             return null;
         }
         List<String> list = new ArrayList<String>();
-        //元素名<ELEMENT key = value ...>([^</ELEMENT>]*)</ELEMENT>
+        // 元素名<ELEMENT key = value ...>([^</ELEMENT>]*)</ELEMENT>
         StringBuffer regex = new StringBuffer();
         regex.append("<").append(element + ".*").append(">");
         regex.append("([^</" + element + ">]*)");
@@ -278,7 +272,7 @@ public class JsonAndXmlUtils {
      * @return
      */
     public static String xmlNodeToUpperCase(String xml) {
-        if (StringUtils.isNotBlank(xml)) {
+        if (StringUtils.isBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -299,7 +293,7 @@ public class JsonAndXmlUtils {
      * @return
      */
     public static String xmlNodeToLowerCase(String xml) {
-        if (StringUtils.isNotBlank(xml)) {
+        if (StringUtils.isBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -320,7 +314,7 @@ public class JsonAndXmlUtils {
      * @return
      */
     public static String xmlNodeFirstLetterToUpperCase(String xml) {
-        if (StringUtils.isNotBlank(xml)) {
+        if (StringUtils.isBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -339,7 +333,7 @@ public class JsonAndXmlUtils {
     }
 
     public static String xmlNodeFirstLetterToUpper(String xml) {
-        if (StringUtils.isNotBlank(xml)) {
+        if (StringUtils.isBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -365,7 +359,7 @@ public class JsonAndXmlUtils {
      * @return
      */
     public static String xmlNodeFirstLetterToLowerCase(String xml) {
-        if (StringUtils.isNotBlank(xml)) {
+        if (StringUtils.isBlank(xml)) {
             return xml;
         }
         String regex = "<(/*[A-Za-z]+/?)>";
@@ -454,15 +448,50 @@ public class JsonAndXmlUtils {
         final BsXml xmlObj = JsonAndXmlUtils.xmlToObject(XML, BsXml.class);
         System.out.println(xmlObj);
 
+
+        String xml2 = "<ROOT>\n" +
+                "    <OPSYSTEM>HIS</OPSYSTEM>\n" +
+                "    <OPWINID>1</OPWINID>\n" +
+                "    <CONSIS_PRESC_MSTVW>\n" +
+                "        <PRESC_DATE>2013-09-12 10:19:50</PRESC_DATE>\n" +
+                "        <PRESC_NO>1</PRESC_NO>\n" +
+                "        <CONSIS_PRESC_DTLVW>\n" +
+                "            <PRESC_NO>1-30585836</PRESC_NO>\n" +
+                "            <ITEM_NO>1</ITEM_NO>\n" +
+                "        </CONSIS_PRESC_DTLVW>\n" +
+                "\t\t<CONSIS_PRESC_DTLVW>\n" +
+                "            <PRESC_NO>1-30585836</PRESC_NO>\n" +
+                "            <ITEM_NO>2</ITEM_NO>\n" +
+                "        </CONSIS_PRESC_DTLVW>\n" +
+                "    </CONSIS_PRESC_MSTVW>\n" +
+                "\t <CONSIS_PRESC_MSTVW>\n" +
+                "        <PRESC_DATE>2013-09-12 10:19:50</PRESC_DATE>\n" +
+                "        <PRESC_NO>2</PRESC_NO>\n" +
+                "        <CONSIS_PRESC_DTLVW>\n" +
+                "            <PRESC_NO>1-30585836</PRESC_NO>\n" +
+                "            <ITEM_NO>3</ITEM_NO>\n" +
+                "        </CONSIS_PRESC_DTLVW>\n" +
+                "\t\t<CONSIS_PRESC_DTLVW>\n" +
+                "            <PRESC_NO>1-30585836</PRESC_NO>\n" +
+                "            <ITEM_NO>4</ITEM_NO>\n" +
+                "        </CONSIS_PRESC_DTLVW>\n" +
+                "    </CONSIS_PRESC_MSTVW>\n" +
+                "</ROOT>";
+
+        ROOT xml1 = JsonAndXmlUtils.xmlToObject(xml2, ROOT.class);
+        System.out.println(xml1);
+
+        final ROOT his = new ROOT("HIS", "1", Arrays.asList(new ConsisPrescMstvw("2013-09-12 10:19:50", "2", Arrays.asList(new ConsisPrescDtlvw("1-30585836", "1")))));
+        System.out.println(JsonAndXmlUtils.objectToXml(his));
+
     }
 
-    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BsXml<T> {
-        private MsgHeader msgHeader;
-        private T msgBody;
-        private String extra;
+        public MsgHeader msgHeader;
+        public T msgBody;
+        public String extra;
 
         @Override
         public String toString() {
@@ -470,40 +499,38 @@ public class JsonAndXmlUtils {
         }
     }
 
-    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MsgHeader {
-        private String sender;
-        private String msgType;
-        private String msgVersion;
+        public String sender;
+        public String msgType;
+        public String msgVersion;
     }
 
-    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MsgBody {
-        private String patientId;
-        private String patientName;
-        private String identityCardType;
-        private String identityCardNumber;
-        private String mobile;
+        public String patientId;
+        public String patientName;
+        public String identityCardType;
+        public String identityCardNumber;
+        public String mobile;
 
         @JacksonXmlProperty(localName = "PatientInfo")
-        private User user;
+        public User user;
     }
 
-    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class User implements Cloneable {
-        private Long id;
-        private String username;
-        private String password;
+        public Long id;
+        public String username;
+        public String password;
 
-        @JacksonXmlElementWrapper(localName = "Roles")
+        // 使用 useWrapping 确定输出的集合是否包装或平铺
+        @JacksonXmlElementWrapper(localName = "Roles"/*, useWrapping = false*/)
         @JacksonXmlProperty(localName = "Role")
-        private List<Role> roles;
+        public List<Role> roles;
 
         public User(final Long id, final String username, final String password) {
             this.id = id;
@@ -515,12 +542,45 @@ public class JsonAndXmlUtils {
         }
     }
 
-    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Role {
-        private String code;
-        private String name;
+        public String code;
+        public String name;
     }
 
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ROOT {
+        public String OPSYSTEM;
+        public String OPWINID;
+
+        @JacksonXmlElementWrapper(localName = "CONSIS_PRESC_MSTVW", useWrapping = false)
+        @JacksonXmlProperty(localName = "CONSIS_PRESC_MSTVW")
+        public List<ConsisPrescMstvw> CONSIS_PRESC_MSTVW;
+
+        @Override
+        public String toString() {
+            return JsonAndXmlUtils.objectToJson(this);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ConsisPrescMstvw {
+        public String PRESC_DATE;
+        public String PRESC_NO;
+
+        @JacksonXmlElementWrapper(localName = "CONSIS_PRESC_DTLVW", useWrapping = false)
+        @JacksonXmlProperty(localName = "CONSIS_PRESC_DTLVW")
+        public List<ConsisPrescDtlvw> CONSIS_PRESC_DTLVW;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ConsisPrescDtlvw {
+        public String PRESC_NO;
+        public String ITEM_NO;
+    }
 }
