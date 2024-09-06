@@ -4,28 +4,17 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import com.google.common.util.concurrent.*;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import com.springboot.provider.common.ResultCode;
 import com.springboot.provider.common.ResultJson;
 import com.springboot.provider.common.annotation.OptionLog;
-import com.springboot.provider.common.enums.DataSourceEnum;
 import com.springboot.provider.common.event.ApplicationMessageEvent;
 import com.springboot.provider.common.event.ApplicationNotifyEvent;
 import com.springboot.provider.common.holder.ApplicationContextDataSourceHolder;
 import com.springboot.provider.common.holder.CallbackThreadPoolExecutorHolder;
-import com.springboot.provider.common.proxy.JdbcOperationsProxy;
-import com.springboot.provider.common.spi.demo.algorithm.AlgorithmConfiguration;
-import com.springboot.provider.common.spi.demo.algorithm.encrypt.EncryptAlgorithm;
-import com.springboot.provider.common.spi.demo.algorithm.encrypt.context.EncryptContext;
-import com.springboot.provider.common.spi.demo.algorithm.encrypt.factory.EncryptAlgorithmFactory;
-import com.springboot.provider.common.spi.demo.compress.Compressor;
-import com.springboot.provider.common.spi.simple.agent.AgentTypedSPIRegistry;
 import com.springboot.provider.common.utils.PropertyUtils;
 import com.springboot.provider.common.utils.ResourceUtils;
 import com.springboot.provider.module.common.AppPayProperties;
 import com.springboot.provider.module.common.service.CommonService;
 import com.springboot.provider.module.common.service.PayService;
-import com.springboot.provider.module.his.entity.User;
-import com.springboot.provider.module.lis.entity.Role;
 import com.springboot.provider.module.pay.enums.PayStrategy;
 import com.springboot.provider.module.pay.factory.PayStrategyFactory;
 import jakarta.servlet.ServletContext;
@@ -36,18 +25,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -96,10 +80,6 @@ public class CommonController {
     @Cacheable("index")
     @RequestMapping("/common")
     public ResultJson index() {
-        User user = new User();
-        user.setUsername("spring boot");
-        user.setPassword((String.valueOf(counter.incrementAndGet())));
-
         logger.info("servletContext.getContextPath() = " + servletContext.getContextPath());
 
         logger.info("loadProperties: " + PropertyUtils.loadProperties("application.properties").getProperty("context.initializer.classes"));
@@ -129,15 +109,7 @@ public class CommonController {
                 .username("root")
                 .password("root").build();
 
-        DataSource build1 = ApplicationContextDataSourceHolder.builder()
-                .jdbcUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false")
-                .username("root")
-                .password("root").build();
-
-
-        DataSource dataSource = ApplicationContextDataSourceHolder.buildDataSource(DataSourceEnum.MYSQL.getDbType(), "localhost", "3306", "test", "root", "root", "");
-
-        ApplicationContextDataSourceHolder.addDataSource("test", build1);
+        ApplicationContextDataSourceHolder.addDataSource("test", build);
         return ResultJson.success();
     }
 
@@ -150,34 +122,8 @@ public class CommonController {
 
     @RequestMapping("/test/getDataSource")
     public ResultJson getFromDataSource() {
-//        JdbcTemplate jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(MultiDataSourceHolder.getDataSource("development")));
-        JdbcOperations jdbcTemplate = JdbcOperationsProxy.getProxyInstance("test");
 
-//        List<Object[]> list = new ArrayList<>();
-//        list.add(new Object[]{"admin", "ADMIN"});
-//        list.add(new Object[]{"dba", "DBA"});
-//        int[] ints = jdbcTemplate.batchUpdate("insert into role (name, title) values (?, ?)", list);
-
-//        List<Role> roleList = new ArrayList<>();
-//        roleList.add(new Role("admin", "ADMIN"));
-//        roleList.add(new Role("dba", "DBA"));
-//        int[][] ints = jdbcTemplate.batchUpdate("insert into role (name, title) values (?, ?)", roleList, roleList.size(), (preparedStatement, role) -> {
-//            preparedStatement.setString(1, role.getName());
-//            preparedStatement.setString(2, role.getTitle());
-//        });
-
-        RowMapper<Role> rowMapper = new BeanPropertyRowMapper<>(Role.class);
-//        List<Role> roles = jdbcTemplate.query("select * from role", rowMapper);
-        List<Role> roles = jdbcTemplate.query("select * from role where id = ? and code = ?", rowMapper, 1, "admin");
-
-//        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select * from role");
-//        List<String> nameList = jdbcTemplate.queryForList("select name from role", String.class);
-//        List<String> nameList = jdbcTemplate.queryForList("select name from role where id >= ?", String.class, 9);
-
-//        String name = jdbcTemplate.queryForObject("select name from role where id = ?", String.class, 1);
-
-
-        return ResultJson.success(roles);
+        return ResultJson.success();
     }
 
     @RequestMapping("/test/insert")
@@ -249,32 +195,6 @@ public class CommonController {
             return ResultJson.success("consume: " + id + " success, Container might contain 1: " + b);
         }
         return ResultJson.failure("access too frequently");
-    }
-
-    @RequestMapping(value = "/test/spi/factory/{param}")
-    public ResultJson factory(@PathVariable String param) {
-        List<Compressor> compressors = SpringFactoriesLoader.loadFactories(Compressor.class, null);
-        for (Compressor compressor : compressors) {
-            if ("GZIP".equals(compressor.getType())) {
-                byte[] compress = compressor.compress(param.getBytes(StandardCharsets.UTF_8));
-                return ResultJson.success(new String(compress));
-            }
-        }
-        return null;
-    }
-
-    @RequestMapping(value = "/test/spi/{param}")
-    public ResultJson spi(@PathVariable String param) {
-        Compressor compressor = AgentTypedSPIRegistry.getRegisteredService(Compressor.class, "GZIP");
-        byte[] compress = compressor.compress(param.getBytes(StandardCharsets.UTF_8));
-        return ResultJson.success(new String(compress));
-    }
-
-    @RequestMapping(value = "/test/spi/algorithm/{type}/{param}")
-    public ResultJson algorithm(@PathVariable String type, @PathVariable String param) {
-        EncryptAlgorithm<Object, String> algorithm = EncryptAlgorithmFactory.newInstance(new AlgorithmConfiguration("SM4", createECBProperties()));
-        EncryptContext encryptContext = new EncryptContext("test", "test", "test", "name");
-        return ResultJson.success("enc".equals(type) ? algorithm.encrypt(param, encryptContext) : algorithm.decrypt(param, encryptContext));
     }
 
     @RequestMapping(value = "/test/javassist")

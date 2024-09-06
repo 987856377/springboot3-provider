@@ -4,7 +4,6 @@ import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.springboot.provider.common.lifecycle.ApplicationContextInitializerHandler;
 import com.springboot.provider.common.lifecycle.BootstrapRegistryInitializerHandler;
-import com.springboot.provider.common.selector.annotation.EnableBeans;
 import com.springboot.provider.config.SSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
@@ -22,8 +22,8 @@ import java.util.Arrays;
 
 //@EnableHttps
 // 自定义数据源一定要排除SpringBoot自动配置数据源，不然会出现循环引用的问题，The dependencies of some of the beans in the application context form a cycle
-@SpringBootApplication/*(exclude = {DataSourceAutoConfiguration.class})*/
-@EnableBeans(packages = "com.springboot.provider.module.his.entity")
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+// @EnableBeans(packages = "com.springboot.provider.module.his.entity")
 public class Application {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -47,6 +47,7 @@ public class Application {
         SpringApplication application = new SpringApplication(Application.class);
         application.addBootstrapRegistryInitializer(new BootstrapRegistryInitializerHandler());
         application.addInitializers(new ApplicationContextInitializerHandler());
+
         application.run(args);
 
 //        SpringApplication.run(Application.class, args);
@@ -78,18 +79,6 @@ public class Application {
 
         return restTemplate;
     }
-
-//    @Bean
-//    public Compressor compressor() throws InstantiationException, IllegalAccessException {
-//        Compressor instance = null;
-//        ServiceLoader<Compressor> compressors = ServiceLoader.load(Compressor.class);
-//        for (Compressor compressor : compressors) {
-//            Class<? extends Compressor> aClass = compressor.getClass();
-//            instance = aClass.newInstance();
-//            break;
-//        }
-//        return instance;
-//    }
 
     @Bean
     public SymmetricCrypto symmetricCrypto() {

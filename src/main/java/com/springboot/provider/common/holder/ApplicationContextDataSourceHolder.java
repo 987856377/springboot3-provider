@@ -1,12 +1,9 @@
 package com.springboot.provider.common.holder;
 
-import com.springboot.provider.common.builder.HikariDataSourceBuilder;
-import com.springboot.provider.common.enums.DataSourceEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
@@ -57,10 +54,11 @@ public class ApplicationContextDataSourceHolder implements InitializingBean, Dis
      * 根据数据源名称获取数据源
      *
      * @param dsName 数据源名称
+     *
      * @return
      */
     public static DataSource getDataSource(String dsName) {
-        if (StringUtils.hasText(dsName)) {
+        if (StringUtils.hasText(dsName) && DATA_SOURCE_MAP.containsKey(dsName)) {
             return DATA_SOURCE_MAP.get(dsName);
         }
         return null;
@@ -73,6 +71,10 @@ public class ApplicationContextDataSourceHolder implements InitializingBean, Dis
      * @param dataSource 数据源
      */
     public static synchronized void addDataSource(String dsName, DataSource dataSource) {
+        if (DATA_SOURCE_MAP.containsKey(dsName)) {
+            throw new RuntimeException("the database named [" + dsName + "] already exists");
+        }
+
         DataSource oldDataSource = DATA_SOURCE_MAP.put(dsName, dataSource);
         // 关闭老的数据源
         if (oldDataSource != null) {
@@ -118,50 +120,6 @@ public class ApplicationContextDataSourceHolder implements InitializingBean, Dis
         } catch (Exception e) {
             LOGGER.warn("ApplicationContextDataSourceHolder closeDataSource named [{}] failed", dataSource, e);
         }
-    }
-
-    /**
-     * 创建 Hikari 构造器
-     *
-     * @return HikariDataSourceBuilder
-     */
-    public static HikariDataSourceBuilder builder() {
-        return HikariDataSourceBuilder.create();
-    }
-
-    /**
-     * 构建数据源
-     *
-     * @param dbType   数据库类型
-     * @param ip       数据库地址
-     * @param port     数据库端口
-     * @param instance 数据库
-     * @param username 用户名
-     * @param password 密码
-     * @param etc      预留尾部参数配置
-     * @return
-     */
-    public static DataSource buildDataSource(String dbType, String ip, String port, String instance, String username, String password, String etc) {
-        dbType = dbType.toUpperCase();
-
-        Class dataSourceType;
-        String url;
-
-        if (dbType.equals(DataSourceEnum.MYSQL.getDbType())) {
-            dataSourceType = DataSourceEnum.MYSQL.getDataSourceType();
-            url = DataSourceEnum.MYSQL.getPrefix() + ip + ":" + port + "/" + instance + DataSourceEnum.MYSQL.getSuffix() + etc;
-        } else if (dbType.equals(DataSourceEnum.ORACLE.getDbType())) {
-            dataSourceType = DataSourceEnum.ORACLE.getDataSourceType();
-            url = DataSourceEnum.ORACLE.getPrefix() + ip + ":" + port + ":" + instance + DataSourceEnum.ORACLE.getSuffix() + etc;
-        } else {
-            return null;
-        }
-
-        return DataSourceBuilder.create()
-                .type(dataSourceType)
-                .url(url)
-                .username(username)
-                .password(password).build();
     }
 
     @Override

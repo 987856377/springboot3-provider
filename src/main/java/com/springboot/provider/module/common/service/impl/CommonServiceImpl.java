@@ -1,16 +1,9 @@
 package com.springboot.provider.module.common.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.springboot.provider.module.common.service.CommonService;
-import com.springboot.provider.module.his.entity.User;
-import com.springboot.provider.module.his.service.UserService;
-import com.springboot.provider.module.lis.entity.Role;
-import com.springboot.provider.module.lis.service.RoleService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @program: springboot-provider
@@ -22,39 +15,20 @@ import java.util.UUID;
 @Service
 public class CommonServiceImpl implements CommonService {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
-    private final RoleService roleService;
+    private final JdbcClient masterJdbcClient;
+    private final JdbcClient slaveJdbcClient;
 
-    public CommonServiceImpl(PasswordEncoder passwordEncoder, UserService userService, RoleService roleService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-        this.roleService = roleService;
+    public CommonServiceImpl(final JdbcClient masterJdbcClient, final JdbcClient slaveJdbcClient) {
+        this.masterJdbcClient = masterJdbcClient;
+        this.slaveJdbcClient = slaveJdbcClient;
     }
 
-    @DSTransactional
+    @Transactional
     @Override
     public Integer insert() {
-        String username = UUID.randomUUID().toString();
-        username = username.substring(0, 16);
-
-        User user = new User();
-//        user.setId(SnowflakeConstants.next());
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(username));
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
-        int his = userService.insert(user);
-//        int a= 1/0;
-
-        Role role = new Role();
-//        role.setId(SnowflakeConstants.next());
-        role.setName("admin");
-        role.setTitle("ADMIN");
-        int lis = roleService.insert(role);
-
-//        int i = 1/0;
-        return his + lis;
+        final int admin = masterJdbcClient.sql("insert into u1(username,password) values(?,?)").params("admin", "123456").update();
+        int i = 1 / 0;
+        final int slave = slaveJdbcClient.sql("insert into r1(name,title) values(?,?)").params("ADMIN", "管理员").update();
+        return admin + slave;
     }
-
 }
